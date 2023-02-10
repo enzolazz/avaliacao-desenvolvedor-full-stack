@@ -3,6 +3,9 @@ O desafio a seguir pode ser realizado em qualquer linguagem.
 
 Além dos requisitos que serão descritos, você é livre e encorajado à realizar qualquer alteração que vise a melhoria do produto. Tenha em mente que seu objetivo é criar o melhor serviço que conseguir.
 
+A divisão do desafio em 4 partes é somente um direcionamento visando uma progressão em complexidade.
+**Não é necessário entregar todas as partes**, que também podem ser abordadas em qualquer ordem.
+
 ## Parte 1
 
 Você deve criar um web service encurtador de URLs que será utilizado via chamadas REST.
