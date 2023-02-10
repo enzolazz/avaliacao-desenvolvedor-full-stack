@@ -10,7 +10,7 @@ A divisão do desafio em 4 partes é somente um direcionamento visando uma progr
 
 Você deve criar um web service encurtador de URLs que será utilizado via chamadas REST.
 
-O serviço deverá disponibilizar a possibilidade de cadastro e remoção de URLs, além do redirecionamento.
+O serviço deverá disponibilizar a possibilidade de cadastro e redirecionamento de URLs.
 
 Ao cadastrada, a URL deve ter vinculada um **identificador não sequencial alfanumérico**, pelo qual ela será acessada.
 
