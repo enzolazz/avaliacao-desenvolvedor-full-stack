@@ -1,55 +1,66 @@
-# Avaliação backend 
-O desafio a seguir pode ser realizado em qualquer linguagem.
+# Avaliação Full Stack  
 
-Além dos requisitos que serão descritos, você é livre e encorajado à realizar qualquer alteração que vise a melhoria do produto. Tenha em mente que seu objetivo é criar o melhor serviço que conseguir.
+Este desafio pode ser realizado em qualquer linguagem ou framework.  
 
-A divisão do desafio em 4 partes é somente um direcionamento visando uma progressão em complexidade.
-**Não é necessário entregar todas as partes**, que também podem ser abordadas em qualquer ordem.
+Além dos requisitos que serão descritos, você é livre e encorajado a realizar melhorias que visem a evolução do produto.  
+Tenha em mente que o objetivo é criar o melhor serviço possível, considerando funcionalidades, eficiência, e experiência do usuário.  
 
-## Parte 1
+A divisão em 4 partes é um direcionamento para ajudar na progressão da complexidade.  
+**Não é necessário concluir todas as partes**, e as mesmas podem ser realizadas em qualquer ordem.  
 
-Você deve criar um web service encurtador de URLs que será utilizado via chamadas REST.
+## Parte 1  
 
-O serviço deverá disponibilizar a possibilidade de cadastro e redirecionamento de URLs.
+Você deve criar um serviço **encurtador de URLs** que será acessado via chamadas REST.  
 
-Ao cadastrada, a URL deve ter vinculada um **identificador não sequencial alfanumérico**, pelo qual ela será acessada.
+O serviço deverá permitir o cadastro e redirecionamento de URLs.  
 
-As mesmas serão acessadas pela rota raiz: `http://.../{identificador}`, onde deve ocorrer o redirecionamento à rota original de acordo com o identificador informado.
+Ao ser cadastrada, cada URL deve ter um **identificador não sequencial alfanumérico**, que será usado para acessá-la.  
 
-## Parte 2
+As URLs serão acessadas pela rota raiz: `http://.../{identificador}`. Ao acessar essa rota, deve ocorrer o redirecionamento para o link original vinculado ao identificador.  
 
-Com o aumento da popularidade da aplicação, é vital de coletar informações úteis para os seus usuários.
+Além disso, um frontend deve ser implementado para interagir com o serviço. Este deve incluir:  
+- Um **campo de entrada** para o cadastro de URLs a serem encurtadas.  
+- Uma tabela que exiba as **URLs encurtadas** junto com seus identificadores.  
+- Um **estilo visual moderno e responsivo**, priorizando usabilidade e experiência do usuário.  
 
-Assim, à cada acesso, devem ser coletadas métricas de forma que seja possível as seguintes consultas:
-- Quantidade de visitas no último dia
-- Quantidade de visitas na última hora
-- Quantidade de visitas no último mês
+## Parte 2  
 
-## Parte 3
+Com o aumento da popularidade da aplicação, torna-se necessário coletar informações úteis para os usuários.  
 
-Foi detectado que uma grande quantidade dos links cadastrados são de websites inexistentes ou que se tornaram inativos.
-Desta maneira, foi decidido que é necessário healizar um *healthcheck* dos links cadastrados.
+O serviço deve coletar métricas a cada acesso, permitindo as seguintes consultas:  
+- Quantidade de visitas no último dia  
+- Quantidade de visitas na última hora  
+- Quantidade de visitas no último mês  
 
-Implemente uma solução que realize essa checagem no momento do cadastro do link, bloqueando se falhar.
-Além disso, é necessário fazer a verificação **periódica** dos links já cadastrados, de forma que: se houver **5 falhas consecutivas** esse link seja desativado.
+O frontend deve exibir essas métricas em uma tabela ou gráfico interativo, organizado por identificadores de URLs.  
 
-## Parte 4
+## Parte 3  
 
-A utilização do serviço atingiu uma alta jamais imaginada para o que havia sido desenvolvido.
-Após análise, identificamos que a funcionalidade de *healthcheck* está atrapalhando o desempenho do sistema como um todo e deve ser movida para um *worker* separado.
+Foi identificado que muitas URLs cadastradas apontam para websites inexistentes ou que se tornaram inativos.  
 
-Divida o serviço atual em dois serviços diferentes:
-- Serviço principal: cadastro e redirecionamento de links
-- Serviço validador: responsável por realizar o *healthcheck* e informar quando ultrapassaram o limite de falhas
+Para resolver isso:  
+- Implemente um **healthcheck** das URLs no momento do cadastro, bloqueando URLs inválidas.  
+- Realize uma **verificação periódica** nas URLs já cadastradas. Caso uma URL falhe em 5 verificações consecutivas, ela deve ser **desativada**.  
 
-# Critérios
+No frontend:  
+- Indique na tabela quais URLs estão ativas e quais foram desativadas, com um **sinal visual** como cores ou ícones.  
 
-Serão utilizados os seguintes critérios para avaliação:
-- Clareza do código
-- Facilidade de manutenção
-- Eficiência da solução
-- Escalabilidade
-- Resiliência
+## Parte 4  
 
-# Entrega
-O projeto deve ser entregue no prazo combinado na forma de um repositório git e com as instruções de instalação e execução.
+Com o aumento da utilização, a funcionalidade de *healthcheck* impacta o desempenho geral do sistema.  
+
+Divida o serviço em dois:  
+1. **Serviço Principal**: responsável pelo cadastro e redirecionamento de links.  
+2. **Serviço Validador**: realiza o *healthcheck* e comunica ao serviço principal quando uma URL ultrapassa o limite de falhas.  
+
+Garanta que os dois serviços possam operar de forma independente e escalável.  
+
+No frontend:  
+- Atualize as informações sobre o status das URLs em tempo real, sempre que houver alterações devido ao serviço validador.  
+
+## Critérios de Avaliação  
+
+O desafio será avaliado considerando os seguintes aspectos:  
+- **Clareza do código**: organização, nomenclatura e documentação.  
+- **Facilidade de manutenção**: modularidade e separação de responsabilidades.  
+- **Eficiência
