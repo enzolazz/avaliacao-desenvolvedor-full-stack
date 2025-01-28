@@ -63,4 +63,16 @@ No frontend:
 O desafio será avaliado considerando os seguintes aspectos:  
 - **Clareza do código**: organização, nomenclatura e documentação.  
 - **Facilidade de manutenção**: modularidade e separação de responsabilidades.  
-- **Eficiência**
+- **Eficiênciada solução**: uso consciente de recursos e desempenho.  
+- **Estilo e usabilidade**: design moderno e intuitivo no frontend.  
+- **Escalabilidade**: capacidade de suportar um grande número de usuários e requisições.  
+- **Resiliência**: comportamento adequado em cenários de falha.  
+
+## Entrega  
+
+O projeto deve ser entregue em um repositório git, contendo:  
+1. Código-fonte completo do backend e frontend.  
+2. Documentação para instalação e execução.  
+3. (Opcional) Links para demonstração em produção (ex.: Heroku, Vercel).  
+
+Boa sorte!
