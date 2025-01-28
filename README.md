@@ -63,4 +63,4 @@ No frontend:
 O desafio será avaliado considerando os seguintes aspectos:  
 - **Clareza do código**: organização, nomenclatura e documentação.  
 - **Facilidade de manutenção**: modularidade e separação de responsabilidades.  
-- **Eficiência
+- **Eficiência**
