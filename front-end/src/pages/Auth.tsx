@@ -1,4 +1,4 @@
-import { AuthTabs } from "@/auth/AuthTabs";
+import { AuthTabs } from "@/components/auth/AuthTabs";
 import { ThemeToggle } from "@/components/ThemeToggle";
 
 export default function Auth() {
