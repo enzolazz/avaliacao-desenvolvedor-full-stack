@@ -33,12 +33,12 @@ const formSchema = z
     username: z
       .string()
       .min(3, "Nome de usuário deve ter pelo menos 3 caracteres")
-      .max(20, "Nome de usuário deve ter no máximo 20 caracteres")
+      .max(15, "Nome de usuário deve ter no máximo 15 caracteres")
       .regex(
         /^[a-z0-9_.-]{3,20}$/,
         "Nome de usuário só pode conter letras, números, underscore (_), ponto (.) e hífen (-)",
       ),
-    password: z.string().min(5, "Senha deve ter pelo menos 8 caracteres"),
+    password: z.string().min(5, "Senha deve ter pelo menos 5 caracteres"),
     confirmPassword: z.string("").min(5, "Confirmação de senha é obrigatória"),
   })
   .refine((data) => data.password === data.confirmPassword, {
@@ -73,9 +73,9 @@ export function RegisterForm() {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Realizar Login</CardTitle>
+        <CardTitle>Cadastro</CardTitle>
         <CardDescription>
-          Digite suas credenciais para acessar sua conta!
+          Crie uma conta para começar a encurtar suas URLs!
         </CardDescription>
       </CardHeader>
       <CardContent className="grid gap-6">
@@ -149,7 +149,7 @@ export function RegisterForm() {
               name="confirmPassword"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Senha</FormLabel>
+                  <FormLabel>Confirmar senha</FormLabel>
                   <FormControl>
                     <Input
                       placeholder="A mesma senha forte"

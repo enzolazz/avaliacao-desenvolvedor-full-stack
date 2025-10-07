@@ -30,7 +30,7 @@ const formSchema = z.object({
   username: z
     .string("Nome de usuário inválido")
     .min(3, "Nome de usuário deve ter pelo menos 3 caracteres")
-    .max(15, "Nome de usuário deve ter no máximo 20 caracteres")
+    .max(15, "Nome de usuário deve ter no máximo 15 caracteres")
     .regex(
       /^[a-z0-9_.-]{3,20}$/,
       "Nome de usuário só pode conter letras, números, underscore (_), ponto (.) e hífen (-)",
@@ -96,7 +96,11 @@ export function LoginForm() {
                 <FormItem>
                   <FormLabel>Senha</FormLabel>
                   <FormControl>
-                    <Input placeholder="Uma senha forte" {...field} />
+                    <Input
+                      placeholder="Uma senha forte"
+                      {...field}
+                      type="password"
+                    />
                   </FormControl>
 
                   <FormMessage />
