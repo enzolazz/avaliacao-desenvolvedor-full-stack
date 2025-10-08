@@ -1,20 +1,109 @@
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useState } from "react";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+import { toast } from "sonner";
+import { useNavigate } from "react-router";
+import { ApiError, login, register } from "@/api/auth";
 import { LoginForm } from "./LoginForm";
 import { RegisterForm } from "./RegisterForm";
+import { registerFormSchema, loginFormSchema } from "@/types/auth";
+import type { RegisterFormValues, LoginFormValues } from "@/types/auth";
+
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm, type UseFormReturn } from "react-hook-form";
 
 export function AuthTabs() {
+  const navigate = useNavigate();
+  const [activeTab, setActiveTab] = useState<"login" | "register">("login");
+
+  const handleRegister = async (values: RegisterFormValues) => {
+    try {
+      await register(values);
+      toast.success("Registro realizado com sucesso!");
+
+      registerForm.reset();
+      setActiveTab("login");
+    } catch (err: unknown) {
+      if (err instanceof ApiError) {
+        if (err.status === 409) {
+          registerForm.setError("username", {
+            type: "manual",
+            message: err.message,
+          });
+        } else {
+          registerForm.setError("root", {
+            type: "manual",
+            message: err.message,
+          });
+        }
+      } else {
+        registerForm.setError("root", {
+          type: "manual",
+          message: "Erro inesperado",
+        });
+      }
+    }
+  };
+
+  const handleLogin = async (values: LoginFormValues) => {
+    try {
+      await login(values);
+      toast.success("Login realizado!");
+
+      loginForm.reset();
+      navigate("/dashboard");
+    } catch (err: unknown) {
+      if (err instanceof ApiError) {
+        loginForm.setError("username", {
+          type: "manual",
+          message: err.message,
+        });
+
+        loginForm.setError("password", {
+          type: "manual",
+          message: "",
+        });
+      } else {
+        loginForm.setError("root", {
+          type: "manual",
+          message: "Erro inesperado ao realizar login",
+        });
+      }
+    }
+  };
+
+  const registerForm: UseFormReturn<RegisterFormValues> = useForm({
+    resolver: zodResolver(registerFormSchema),
+    defaultValues: {
+      name: "",
+      surname: "",
+      username: "",
+      password: "",
+      confirmPassword: "",
+    },
+  });
+
+  const loginForm: UseFormReturn<LoginFormValues> = useForm({
+    resolver: zodResolver(loginFormSchema),
+    defaultValues: { username: "", password: "" },
+  });
+
   return (
     <div className="flex w-full max-w-xl flex-col gap-6 text-xl">
-      <Tabs defaultValue="login">
+      <Tabs
+        value={activeTab}
+        onValueChange={(v) => setActiveTab(v as "login" | "register")}
+      >
         <TabsList>
           <TabsTrigger value="login">Login</TabsTrigger>
           <TabsTrigger value="register">Registrar</TabsTrigger>
         </TabsList>
+
         <TabsContent value="login">
-          <LoginForm />
+          <LoginForm onSubmit={handleLogin} form={loginForm} />
         </TabsContent>
+
         <TabsContent value="register">
-          <RegisterForm />
+          <RegisterForm onSubmit={handleRegister} form={registerForm} />
         </TabsContent>
       </Tabs>
     </div>
