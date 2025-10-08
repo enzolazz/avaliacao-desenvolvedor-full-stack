@@ -17,7 +17,7 @@ export const loginFormSchema = z.object({
 export const registerFormSchema = z
   .object({
     name: z.string("Nome inválido").trim().min(1, "Nome é obrigatório"),
-    surname: z.string("Nome inválido").trim().min(1, "Sobrenome é obrigatório"),
+    surname: z.string("Sobrenome inválido").trim().min(1, "Sobrenome é obrigatório"),
     username: z
       .string()
       .min(3, "Nome de usuário deve ter pelo menos 3 caracteres")
