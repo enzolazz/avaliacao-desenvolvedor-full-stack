@@ -6,7 +6,7 @@ export const loginFormSchema = z.object({
     .min(3, "Nome de usuário deve ter pelo menos 3 caracteres")
     .max(15, "Nome de usuário deve ter no máximo 15 caracteres")
     .regex(
-      /^[a-z0-9_.-]{3,20}$/,
+      /^[a-z0-9_.-]{3,15}$/,
       "Nome de usuário só pode conter letras, números, underscore (_), ponto (.) e hífen (-)",
     ),
   password: z
@@ -17,13 +17,16 @@ export const loginFormSchema = z.object({
 export const registerFormSchema = z
   .object({
     name: z.string("Nome inválido").trim().min(1, "Nome é obrigatório"),
-    surname: z.string("Sobrenome inválido").trim().min(1, "Sobrenome é obrigatório"),
+    surname: z
+      .string("Sobrenome inválido")
+      .trim()
+      .min(1, "Sobrenome é obrigatório"),
     username: z
       .string()
       .min(3, "Nome de usuário deve ter pelo menos 3 caracteres")
       .max(15, "Nome de usuário deve ter no máximo 15 caracteres")
       .regex(
-        /^[a-z0-9_.-]{3,20}$/,
+        /^[a-z0-9_.-]{3,15}$/,
         "Nome de usuário só pode conter letras, números, underscore (_), ponto (.) e hífen (-)",
       ),
     password: z.string().min(5, "Senha deve ter pelo menos 5 caracteres"),
