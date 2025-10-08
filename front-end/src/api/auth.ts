@@ -53,7 +53,7 @@ function returnErrors(error: unknown) {
   if (isAxiosError(error)) {
     if (error.response) {
       const status = error.response.status;
-      const message = error.response.data.error;
+      const message = error.response.data?.error ?? "Erro desconhecido";
       const formattedMessage =
         typeof message === "string" && message.length > 0
           ? `${message.charAt(0).toUpperCase()}${message.slice(1)}.`
