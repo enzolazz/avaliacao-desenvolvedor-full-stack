@@ -7,24 +7,21 @@ import type {
   RegisterResponse,
 } from "./types/auth";
 
+export class ApiError extends Error {
+  status: number;
+  constructor(message: string, status: number) {
+    super(message);
+    this.name = "ApiError";
+    this.status = status;
+  }
+}
+
 export async function login(data: LoginRequest): Promise<LoginResponse> {
   try {
     const response = await api.post<LoginResponse>("/auth/login", data);
     return response.data;
   } catch (error: unknown) {
-    if (isAxiosError(error)) {
-      if (error.response) {
-        const status = error.response.status;
-        const message =
-          (error.response.data as { message?: string })?.message ||
-          `Erro ${status}: falha ao realizar login.`;
-        throw new Error(message);
-      }
-
-      if (error.request) {
-        throw new Error("Servidor não respondeu. Verifique sua conexão.");
-      }
-    }
+    returnErrors(error);
 
     throw new Error(
       error instanceof Error
@@ -41,25 +38,33 @@ export async function register(
     const response = await api.post<RegisterResponse>("/auth/register", data);
     return response.data;
   } catch (error: unknown) {
-    if (isAxiosError(error)) {
-      if (error.response) {
-        const status = error.response.status;
-        // FastAPI geralmente retorna erros no campo 'detail'
-        const message =
-          (error.response.data as { detail?: string })?.detail ||
-          `Erro ${status}: falha ao realizar cadastro.`;
-        throw new Error(message);
-      }
+    returnErrors(error);
 
-      if (error.request) {
-        throw new Error("Servidor não respondeu. Verifique sua conexão.");
-      }
-    }
-
-    throw new Error(
+    throw new ApiError(
       error instanceof Error
         ? `Erro inesperado: ${error.message}`
         : "Erro inesperado ao realizar cadastro.",
+      0,
     );
+  }
+}
+
+function returnErrors(error: unknown) {
+  if (isAxiosError(error)) {
+    if (error.response) {
+      const status = error.response.status;
+      const message = error.response.data?.error ?? "Erro desconhecido";
+      const formattedMessage =
+        typeof message === "string" && message.length > 0
+          ? `${message.charAt(0).toUpperCase()}${message.slice(1)}.`
+          : "Ocorreu um erro inesperado.";
+      throw new ApiError(
+        formattedMessage,
+        status,
+      );
+    }
+    if (error.request) {
+      throw new ApiError("Servidor não respondeu. Verifique sua conexão.", 0);
+    }
   }
 }

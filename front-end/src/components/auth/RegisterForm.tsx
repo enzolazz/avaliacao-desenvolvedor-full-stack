@@ -1,9 +1,5 @@
 "use client";
 
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
-
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -22,54 +18,15 @@ import {
 } from "@/components/ui/form";
 
 import { Input } from "@/components/ui/input";
-import { useNavigate } from "react-router";
-import { toast } from "sonner";
-import { register } from "@/api/auth";
+import type { RegisterFormValues } from "@/types/auth";
+import type { UseFormReturn } from "react-hook-form";
 
-const formSchema = z
-  .object({
-    name: z.string("Nome inválido").trim().min(1, "Nome é obrigatório"),
-    surname: z.string("Nome inválido").trim().min(1, "Sobrenome é obrigatório"),
-    username: z
-      .string()
-      .min(3, "Nome de usuário deve ter pelo menos 3 caracteres")
-      .max(15, "Nome de usuário deve ter no máximo 15 caracteres")
-      .regex(
-        /^[a-z0-9_.-]{3,20}$/,
-        "Nome de usuário só pode conter letras, números, underscore (_), ponto (.) e hífen (-)",
-      ),
-    password: z.string().min(5, "Senha deve ter pelo menos 5 caracteres"),
-    confirmPassword: z.string("").min(5, "Confirmação de senha é obrigatória"),
-  })
-  .refine((data) => data.password === data.confirmPassword, {
-    path: ["confirmPassword"],
-    error: "As senhas não coincidem",
-  });
+interface RegisterFormProps {
+  onSubmit: (values: RegisterFormValues) => void | Promise<void>;
+  form: UseFormReturn<RegisterFormValues>;
+}
 
-type FormValues = z.infer<typeof formSchema>;
-
-export function RegisterForm() {
-  const navigate = useNavigate();
-
-  const form = useForm<FormValues>({
-    resolver: zodResolver(formSchema),
-    defaultValues: {
-      username: "",
-      password: "",
-    },
-  });
-
-  const handleRegister = async (values: FormValues) => {
-    try {
-      await register(values);
-      navigate("/auth");
-    } catch (error: unknown) {
-      const message =
-        error instanceof Error ? error.message : "Erro inesperado.";
-      toast.error(message);
-    }
-  };
-
+export function RegisterForm({ onSubmit, form }: RegisterFormProps) {
   return (
     <Card>
       <CardHeader>
@@ -80,10 +37,7 @@ export function RegisterForm() {
       </CardHeader>
       <CardContent className="grid gap-6">
         <Form {...form}>
-          <form
-            onSubmit={form.handleSubmit(handleRegister)}
-            className="space-y-8"
-          >
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
             <FormField
               control={form.control}
               name="name"
