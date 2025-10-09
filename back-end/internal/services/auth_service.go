@@ -24,11 +24,7 @@ func (s *AuthService) Login(username, password string) (string, string, error) {
 		return "", "", errors.New("nome de usuário ou senha inválida")
 	}
 
-	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
-		"user_id":  user.ID.String(),
-		"username": user.Username,
-		"exp":      time.Now().Add(24 * time.Hour).Unix(),
-	})
+	token := newToken(user.ID.String(), user.Username)
 
 	signedToken, err := token.SignedString([]byte(s.JWTSecret))
 	if err != nil {
@@ -69,12 +65,14 @@ func (s *AuthService) Refresh(oldToken string) (string, error) {
 		return "", errors.New("username claim is not a string")
 	}
 
-	// Issue a new token
-	newToken := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
+	newToken := newToken(userID, username)
+	return newToken.SignedString([]byte(s.JWTSecret))
+}
+
+func newToken(userID, username string) *jwt.Token {
+	return jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
 		"user_id":  userID,
 		"username": username,
 		"exp":      time.Now().Add(24 * time.Hour).Unix(),
 	})
-
-	return newToken.SignedString([]byte(s.JWTSecret))
 }
