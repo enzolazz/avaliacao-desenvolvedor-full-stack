@@ -1,7 +1,11 @@
+import { ShortenCard } from "@/components/protected/dashboard/ShortenCard";
+import { UserURLs } from "@/components/protected/dashboard/UserURLs";
+
 export default function Dashboard() {
   return (
-    <>
-      <h1 className="text-2xl">URLs aparecem aqui...</h1>
-    </>
+    <div className="w-full max-w-screen-xl mx-auto space-y-8 p-8">
+      <ShortenCard />
+      <UserURLs />
+    </div>
   );
 }

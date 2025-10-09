@@ -8,7 +8,6 @@ import (
 	"github.com/golang-jwt/jwt/v5"
 )
 
-// JWTMiddleware validates JWT from Authorization header
 func JWTMiddleware(secret string) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		authHeader := c.GetHeader("Authorization")
@@ -26,7 +25,7 @@ func JWTMiddleware(secret string) gin.HandlerFunc {
 		}
 
 		tokenStr := parts[1]
-		token, err := jwt.Parse(tokenStr, func(token *jwt.Token) (interface{}, error) {
+		token, err := jwt.Parse(tokenStr, func(token *jwt.Token) (any, error) {
 			if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 				return nil, jwt.ErrTokenMalformed
 			}
@@ -39,7 +38,6 @@ func JWTMiddleware(secret string) gin.HandlerFunc {
 			return
 		}
 
-		// optionally set claims in context
 		if claims, ok := token.Claims.(jwt.MapClaims); ok {
 			c.Set("user_id", claims["user_id"])
 			c.Set("username", claims["username"])

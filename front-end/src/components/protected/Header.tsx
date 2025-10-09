@@ -12,13 +12,14 @@ import {
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { LogOut, User } from "lucide-react";
 import { Link } from "react-router";
+import { useAuth } from "@/hooks/use-auth";
 
 interface HeaderProps {
   title: string;
 }
 
 export function Header({ title }: HeaderProps) {
-  function logout() {}
+  const { logout } = useAuth();
 
   return (
     <div className="w-full bg-sidebar h-16 flex justify-between items-center px-6">

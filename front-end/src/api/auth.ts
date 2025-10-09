@@ -6,6 +6,7 @@ import type {
   RegisterRequest,
   RegisterResponse,
 } from "./types/auth";
+import type { ShortenRequest, ShortenResponse } from "./types/url";
 
 export class ApiError extends Error {
   status: number;
@@ -16,38 +17,62 @@ export class ApiError extends Error {
   }
 }
 
-export async function login(data: LoginRequest): Promise<LoginResponse> {
-  try {
-    const response = await api.post<LoginResponse>("/auth/login", data);
-    return response.data;
-  } catch (error: unknown) {
-    returnErrors(error);
+export const apiClient = {
+  auth: {
+    async login(data: LoginRequest): Promise<LoginResponse> {
+      try {
+        const response = await api.post<LoginResponse>("/auth/login", data);
+        return response.data;
+      } catch (error: unknown) {
+        returnErrors(error);
 
-    throw new Error(
-      error instanceof Error
-        ? `Erro inesperado: ${error.message}`
-        : "Erro inesperado ao realizar login.",
-    );
-  }
-}
+        throw new Error(
+          error instanceof Error
+            ? `Erro inesperado: ${error.message}`
+            : "Erro inesperado ao realizar login.",
+        );
+      }
+    },
 
-export async function register(
-  data: RegisterRequest,
-): Promise<RegisterResponse> {
-  try {
-    const response = await api.post<RegisterResponse>("/auth/register", data);
-    return response.data;
-  } catch (error: unknown) {
-    returnErrors(error);
+    async register(data: RegisterRequest): Promise<RegisterResponse> {
+      try {
+        const response = await api.post<RegisterResponse>(
+          "/auth/register",
+          data,
+        );
+        return response.data;
+      } catch (error: unknown) {
+        returnErrors(error);
 
-    throw new ApiError(
-      error instanceof Error
-        ? `Erro inesperado: ${error.message}`
-        : "Erro inesperado ao realizar cadastro.",
-      0,
-    );
-  }
-}
+        throw new Error(
+          error instanceof Error
+            ? `Erro inesperado: ${error.message}`
+            : "Erro inesperado ao realizar cadastro.",
+        );
+      }
+    },
+  },
+  url: {
+    async shorten(data: ShortenRequest): Promise<ShortenResponse> {
+      try {
+        const token = localStorage.getItem("token");
+        const response = await api.post<ShortenResponse>("/shorten", data, {
+          headers: token ? { Authorization: `Bearer ${token}` } : {},
+        });
+
+        return response.data;
+      } catch (error: unknown) {
+        returnErrors(error);
+
+        throw new Error(
+          error instanceof Error
+            ? `Erro inesperado: ${error.message}`
+            : "Erro inesperado ao realizar login.",
+        );
+      }
+    },
+  },
+};
 
 function returnErrors(error: unknown) {
   if (isAxiosError(error)) {
@@ -58,10 +83,7 @@ function returnErrors(error: unknown) {
         typeof message === "string" && message.length > 0
           ? `${message.charAt(0).toUpperCase()}${message.slice(1)}.`
           : "Ocorreu um erro inesperado.";
-      throw new ApiError(
-        formattedMessage,
-        status,
-      );
+      throw new ApiError(formattedMessage, status);
     }
     if (error.request) {
       throw new ApiError("Servidor não respondeu. Verifique sua conexão.", 0);

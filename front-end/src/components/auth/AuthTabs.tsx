@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { toast } from "sonner";
 import { useNavigate } from "react-router";
-import { ApiError, login, register } from "@/api/auth";
+import { ApiError } from "@/api/auth";
 import { LoginForm } from "./LoginForm";
 import { RegisterForm } from "./RegisterForm";
 import { registerFormSchema, loginFormSchema } from "@/types/auth";
@@ -10,9 +10,12 @@ import type { RegisterFormValues, LoginFormValues } from "@/types/auth";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, type UseFormReturn } from "react-hook-form";
+import { useAuth } from "@/hooks/use-auth";
 
 export function AuthTabs() {
   const navigate = useNavigate();
+  const { login, register } = useAuth();
+
   const [activeTab, setActiveTab] = useState<"login" | "register">("login");
 
   const handleRegister = async (values: RegisterFormValues) => {

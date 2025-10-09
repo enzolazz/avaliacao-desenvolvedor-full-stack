@@ -4,6 +4,7 @@ import (
 	"errors"
 	"time"
 
+	"github.com/enzolazz/avaliacao-desenvolvedor-full-stack/back-end/internal/models"
 	"github.com/enzolazz/avaliacao-desenvolvedor-full-stack/back-end/internal/repositories"
 	"github.com/golang-jwt/jwt/v5"
 	"golang.org/x/crypto/bcrypt"
@@ -18,20 +19,21 @@ func NewAuthService(repo *repositories.UserRepository, secret string) *AuthServi
 	return &AuthService{UserRepo: repo, JWTSecret: secret}
 }
 
-func (s *AuthService) Login(username, password string) (string, string, error) {
+func (s *AuthService) Login(username, password string) (string, *models.User, error) {
 	user, _ := s.UserRepo.FindByUsername(username)
 	if user == nil || bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(password)) != nil {
-		return "", "", errors.New("nome de usuário ou senha inválida")
+		return "", nil, errors.New("nome de usuário ou senha inválida")
 	}
 
-	token := newToken(user.ID.String(), user.Username)
+	// Always store the ObjectID as a hex string in the token
+	token := newToken(user.ID.Hex(), user.Username)
 
 	signedToken, err := token.SignedString([]byte(s.JWTSecret))
 	if err != nil {
-		return "", "", err
+		return "", nil, err
 	}
 
-	return signedToken, user.ID.String(), nil
+	return signedToken, user, nil
 }
 
 func (s *AuthService) Refresh(oldToken string) (string, error) {
@@ -56,6 +58,7 @@ func (s *AuthService) Refresh(oldToken string) (string, error) {
 	if !ok {
 		return "", errors.New("user_id claim is not a string")
 	}
+
 	usernameRaw, ok := claims["username"]
 	if !ok {
 		return "", errors.New("username claim missing")
@@ -66,7 +69,12 @@ func (s *AuthService) Refresh(oldToken string) (string, error) {
 	}
 
 	newToken := newToken(userID, username)
-	return newToken.SignedString([]byte(s.JWTSecret))
+	signedToken, err := newToken.SignedString([]byte(s.JWTSecret))
+	if err != nil {
+		return "", err
+	}
+
+	return signedToken, nil
 }
 
 func newToken(userID, username string) *jwt.Token {

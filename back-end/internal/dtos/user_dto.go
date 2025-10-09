@@ -1,6 +1,6 @@
 package dtos
 
-import "github.com/google/uuid"
+import "go.mongodb.org/mongo-driver/bson/primitive"
 
 type RegisterRequest struct {
 	Name     string `json:"name" binding:"required"`
@@ -10,8 +10,8 @@ type RegisterRequest struct {
 }
 
 type RegisterResponse struct {
-	ID       uuid.UUID `json:"id"`
-	Name     string    `json:"name"`
-	Surname  string    `json:"surname"`
-	Username string    `json:"username"`
+	ID       primitive.ObjectID `json:"id"`
+	Name     string             `json:"name"`
+	Surname  string             `json:"surname"`
+	Username string             `json:"username"`
 }

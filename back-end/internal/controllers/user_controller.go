@@ -7,7 +7,6 @@ import (
 	"github.com/enzolazz/avaliacao-desenvolvedor-full-stack/back-end/internal/models"
 	"github.com/enzolazz/avaliacao-desenvolvedor-full-stack/back-end/internal/services"
 	"github.com/gin-gonic/gin"
-	"github.com/google/uuid"
 )
 
 type UserController struct {
@@ -47,21 +46,4 @@ func (c *UserController) GetAll(ctx *gin.Context) {
 		return
 	}
 	ctx.JSON(http.StatusOK, users)
-}
-
-func (c *UserController) GetByID(ctx *gin.Context) {
-	idParam := ctx.Param("id")
-	id, err := uuid.Parse(idParam)
-	if err != nil {
-		ctx.JSON(http.StatusBadRequest, gin.H{"error": "invalid UUID"})
-		return
-	}
-
-	user, err := c.Service.GetUserByID(id)
-	if err != nil || user == nil {
-		ctx.JSON(http.StatusNotFound, gin.H{"error": "user not found"})
-		return
-	}
-
-	ctx.JSON(http.StatusOK, user)
 }

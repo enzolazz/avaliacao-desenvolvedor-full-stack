@@ -23,15 +23,20 @@ func (c *AuthController) Login(ctx *gin.Context) {
 		return
 	}
 
-	token, userID, err := c.Service.Login(input.Username, input.Password)
+	token, user, err := c.Service.Login(input.Username, input.Password)
 	if err != nil {
 		ctx.JSON(http.StatusUnauthorized, gin.H{"error": err.Error()})
 		return
 	}
 
 	ctx.JSON(http.StatusOK, dtos.LoginResponse{
-		Token:  token,
-		UserID: userID,
+		Token: token,
+		User: dtos.UserInfoResponse{
+			ID:       user.ID.String(),
+			Name:     user.Name,
+			Surname:  user.Surname,
+			Username: user.Username,
+		},
 	})
 }
 
