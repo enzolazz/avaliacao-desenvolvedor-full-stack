@@ -22,7 +22,10 @@ func (s *ShortLinkService) CreateShortLink(originalURL, baseURL string) (*models
 		return nil, errors.New("original URL cannot be empty")
 	}
 
-	id, _ := shortid.Generate()
+	id, err := shortid.Generate()
+	if err != nil {
+		return nil, fmt.Errorf("failed to generate short ID: %w", err)
+	}
 
 	shortLink := &models.ShortLink{
 		ID:          id,
