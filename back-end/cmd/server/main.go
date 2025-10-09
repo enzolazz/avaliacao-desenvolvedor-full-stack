@@ -32,7 +32,7 @@ func main() {
 		MaxAge:           12 * time.Hour,
 	}))
 
-	routes.RegisterAuthRoutes(r, cfg.JWTSecret)
+	routes.RegisterRoutes(r, cfg.JWTSecret)
 
 	r.Run(":" + cfg.ServerPort)
 }
