@@ -67,7 +67,7 @@ export const apiClient = {
         throw new Error(
           error instanceof Error
             ? `Erro inesperado: ${error.message}`
-            : "Erro inesperado ao realizar login.",
+            : "Erro inesperado ao encurtar URL.",
         );
       }
     },
