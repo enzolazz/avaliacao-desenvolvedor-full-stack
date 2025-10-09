@@ -37,7 +37,7 @@ export function ShortenCard() {
       } else {
         form.setError("root", {
           type: "manual",
-          message: "Erro inesperado ao realizar login",
+          message: "Erro inesperado ao encurtar URL",
         });
       }
     }
