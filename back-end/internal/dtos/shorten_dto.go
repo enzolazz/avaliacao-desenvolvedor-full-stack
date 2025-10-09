@@ -1,11 +1,10 @@
 package dtos
 
 type CreateShortLinkRequest struct {
-	OriginalURL string `json:"original_url"`
+	Label       string `json:"label"`
+	OriginalURL string `json:"url"`
 }
 
 type CreateShortLinkResponse struct {
-	ID          string `json:"id"`
-	OriginalURL string `json:"original_url"`
-	ShortURL    string `json:"short_url"`
+	ID string `json:"id"`
 }

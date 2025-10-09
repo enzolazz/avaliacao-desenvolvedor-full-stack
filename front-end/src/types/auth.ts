@@ -1,4 +1,7 @@
+import type { LoginRequest, RegisterRequest } from "@/api/types/auth";
+import { createContext } from "react";
 import z from "zod";
+import type { User } from "./user";
 
 export const loginFormSchema = z.object({
   username: z
@@ -39,3 +42,16 @@ export const registerFormSchema = z
 
 export type LoginFormValues = z.infer<typeof loginFormSchema>;
 export type RegisterFormValues = z.infer<typeof registerFormSchema>;
+
+interface AuthContextType {
+  user: User | null;
+  token: string | null;
+  login: (data: LoginRequest) => Promise<void>;
+  register: (data: RegisterRequest) => Promise<void>;
+  logout: () => void;
+  isAuthenticated: boolean;
+}
+
+export const AuthContext = createContext<AuthContextType | undefined>(
+  undefined,
+);

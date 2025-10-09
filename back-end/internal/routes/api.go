@@ -36,7 +36,6 @@ func RegisterRoutes(r *gin.Engine, jwtSecret string) {
 		users := api.Group("/users")
 		users.Use(middleware.AllowOnlyLocalhost())
 		users.GET("", userController.GetAll)
-		users.GET("/:id", userController.GetByID)
 
 		// Protected route
 		shortlinks := api.Group("/shorten")

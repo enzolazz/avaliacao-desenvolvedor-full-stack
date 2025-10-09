@@ -24,6 +24,19 @@ func (r *ShortLinkRepository) Create(link *models.ShortLink) error {
 	return err
 }
 
+func (r *ShortLinkRepository) Exists(id string) (bool, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
+	filter := bson.M{"_id": id}
+	count, err := r.Collection.CountDocuments(ctx, filter)
+	if err != nil {
+		return false, err
+	}
+
+	return count > 0, nil
+}
+
 func (r *ShortLinkRepository) GetByID(id string) (*models.ShortLink, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()

@@ -1,3 +1,5 @@
+import type { User } from "@/types/user";
+
 export interface RegisterRequest {
   name: string;
   surname: string;
@@ -19,9 +21,5 @@ export interface LoginRequest {
 
 export interface LoginResponse {
   token: string;
-  user: {
-    id: string;
-    name: string;
-    username: string;
-  };
+  user: User;
 }
