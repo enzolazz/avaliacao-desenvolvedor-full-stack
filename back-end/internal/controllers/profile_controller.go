@@ -24,7 +24,12 @@ func (c *ProfileController) Me(ctx *gin.Context) {
 		return
 	}
 
-	userID, err := uuid.Parse(userIDStr.(string))
+	userIDStrVal, ok := userIDStr.(string)
+	if !ok {
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": "user_id is not a string"})
+		return
+	}
+	userID, err := uuid.Parse(userIDStrVal)
 	if err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{"error": "invalid user_id"})
 		return
