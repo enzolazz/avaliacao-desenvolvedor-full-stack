@@ -52,8 +52,22 @@ func (s *AuthService) Refresh(oldToken string) (string, error) {
 		return "", errors.New("invalid token claims")
 	}
 
-	userID := claims["user_id"].(string)
-	username := claims["username"].(string)
+	userIDRaw, ok := claims["user_id"]
+	if !ok {
+		return "", errors.New("user_id claim missing")
+	}
+	userID, ok := userIDRaw.(string)
+	if !ok {
+		return "", errors.New("user_id claim is not a string")
+	}
+	usernameRaw, ok := claims["username"]
+	if !ok {
+		return "", errors.New("username claim missing")
+	}
+	username, ok := usernameRaw.(string)
+	if !ok {
+		return "", errors.New("username claim is not a string")
+	}
 
 	// Issue a new token
 	newToken := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
