@@ -77,7 +77,7 @@ export default function Metrics() {
             <h3 className="font-semibold text-lg">Nenhuma URL encontrada</h3>
           </div>
           <p className="text-muted-foreground text-sm max-w-sm text-center">
-            Você ainda não encurtou nenhuma URL. Não é possivel ver as métricas
+            Você ainda não encurtou nenhuma URL. Não é possível ver as métricas
             ainda.
           </p>
         </div>
