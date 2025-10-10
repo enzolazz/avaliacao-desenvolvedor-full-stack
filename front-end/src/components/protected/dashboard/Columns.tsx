@@ -1,5 +1,6 @@
 "use client";
 
+import { CopyButton } from "@/components/ui/copy-button";
 import type { ShortURL } from "@/types/url";
 import type { ColumnDef } from "@tanstack/react-table";
 import { CircleCheck, CircleX } from "lucide-react";
@@ -27,8 +28,16 @@ export const columns: ColumnDef<ShortURL>[] = [
     header: "Identificador",
     cell: ({ row }) => {
       const short_url = row.getValue<string>("id");
+      const rootURL = window.location.origin;
 
-      return <>{short_url}</>;
+      return (
+        <CopyButton
+          text={`${rootURL}/${short_url}`}
+          toastMessage="Link copiado com sucesso!"
+        >
+          {short_url}
+        </CopyButton>
+      );
     },
   },
   {
