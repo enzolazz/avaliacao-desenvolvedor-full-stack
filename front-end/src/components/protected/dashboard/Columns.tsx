@@ -12,29 +12,23 @@ function truncate(text: string, maxLength: number) {
 export const columns: ColumnDef<ShortURL>[] = [
   {
     accessorKey: "label",
-    header: "Nome",
+    header: "Apelido",
 
     cell: ({ row }) => (
       <div className="capitalize">
-        {truncate(row.getValue<string>("label"), 20)}
+        {row.getValue<string>("label")
+          ? truncate(row.getValue<string>("label"), 20)
+          : "-"}
       </div>
     ),
   },
   {
-    accessorKey: "short_url",
-    header: "URL Encurtada",
+    accessorKey: "id",
+    header: "Identificador",
     cell: ({ row }) => {
-      const short_url = row.getValue<string>("short_url");
+      const short_url = row.getValue<string>("id");
 
-      return (
-        <Link
-          to={short_url}
-          onClick={(e) => e.stopPropagation()}
-          className="text-primary"
-        >
-          {short_url}
-        </Link>
-      );
+      return <>{short_url}</>;
     },
   },
   {

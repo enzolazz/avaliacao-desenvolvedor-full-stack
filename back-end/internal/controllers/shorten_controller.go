@@ -53,6 +53,34 @@ func (c *ShortLinkController) Create(ctx *gin.Context) {
 	})
 }
 
+func (c *ShortLinkController) GetAllByUser(ctx *gin.Context) {
+	userIDValue, exists := ctx.Get("user_id")
+	if !exists {
+		ctx.JSON(http.StatusUnauthorized, gin.H{"error": "unauthorized"})
+		return
+	}
+
+	userIDHex, ok := userIDValue.(string)
+	if !ok {
+		ctx.JSON(http.StatusUnauthorized, gin.H{"error": "invalid user_id"})
+		return
+	}
+
+	userID, err := primitive.ObjectIDFromHex(userIDHex)
+	if err != nil {
+		ctx.JSON(http.StatusUnauthorized, gin.H{"error": "invalid user_id format"})
+		return
+	}
+
+	links, err := c.Service.GetAllUserLinks(userID)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	ctx.JSON(http.StatusOK, links)
+}
+
 func (c *ShortLinkController) Redirect(ctx *gin.Context) {
 	id := ctx.Param("id")
 

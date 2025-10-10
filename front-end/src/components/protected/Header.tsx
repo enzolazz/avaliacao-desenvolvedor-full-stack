@@ -19,7 +19,7 @@ interface HeaderProps {
 }
 
 export function Header({ title }: HeaderProps) {
-  const { logout } = useAuth();
+  const { user, logout } = useAuth();
 
   return (
     <div className="w-full bg-sidebar h-16 flex justify-between items-center px-6">
@@ -30,7 +30,9 @@ export function Header({ title }: HeaderProps) {
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Avatar className="size-10 cursor-pointer">
-            <AvatarFallback className="bg-primary">U</AvatarFallback>
+            <AvatarFallback className="bg-primary">
+              {(user?.name && user.name.length > 0) ? user.name[0].toUpperCase() : "?"}
+            </AvatarFallback>
           </Avatar>
         </DropdownMenuTrigger>
         <DropdownMenuContent>

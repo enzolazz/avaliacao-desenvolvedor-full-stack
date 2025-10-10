@@ -50,6 +50,10 @@ func (s *ShortLinkService) CreateShortLink(userID primitive.ObjectID, originalUR
 	return &shortLink, nil
 }
 
+func (s *ShortLinkService) GetAllUserLinks(userID primitive.ObjectID) ([]models.ShortLink, error) {
+	return s.Repo.FindAllByUser(userID)
+}
+
 func (s *ShortLinkService) GetByID(id string) (*models.ShortLink, error) {
 	return s.Repo.GetByID(id)
 }
