@@ -1,4 +1,4 @@
-import { api } from "@/lib/api";
+import { api, redirect } from "@/lib/api";
 import { isAxiosError } from "axios";
 import type {
   LoginRequest,
@@ -6,7 +6,11 @@ import type {
   RegisterRequest,
   RegisterResponse,
 } from "./types/auth";
-import type { ShortenRequest, ShortenResponse } from "./types/url";
+import type {
+  RedirectResponse,
+  ShortenRequest,
+  ShortenResponse,
+} from "./types/url";
 import type { ShortURL } from "@/types/url";
 
 export class ApiError extends Error {
@@ -78,6 +82,22 @@ export const apiClient = {
         const response = await api.get<ShortURL[]>("/shorten", {
           headers: token ? { Authorization: `Bearer ${token}` } : {},
         });
+
+        return response.data;
+      } catch (error: unknown) {
+        returnErrors(error);
+
+        throw new Error(
+          error instanceof Error
+            ? `Erro inesperado: ${error.message}`
+            : "Erro inesperado ao buscar URLs.",
+        );
+      }
+    },
+
+    async redirect(id: string): Promise<RedirectResponse> {
+      try {
+        const response = await redirect.get<RedirectResponse>("/" + id);
 
         return response.data;
       } catch (error: unknown) {

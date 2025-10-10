@@ -90,5 +90,7 @@ func (c *ShortLinkController) Redirect(ctx *gin.Context) {
 		return
 	}
 
-	ctx.Redirect(http.StatusFound, link.OriginalURL)
+	ctx.JSON(http.StatusOK, gin.H{
+		"url": link.OriginalURL,
+	})
 }
