@@ -31,7 +31,7 @@ export function Header({ title }: HeaderProps) {
         <DropdownMenuTrigger asChild>
           <Avatar className="size-10 cursor-pointer">
             <AvatarFallback className="bg-primary">
-              {user?.name[0].toUpperCase()}
+              {(user?.name && user.name.length > 0) ? user.name[0].toUpperCase() : "?"}
             </AvatarFallback>
           </Avatar>
         </DropdownMenuTrigger>
