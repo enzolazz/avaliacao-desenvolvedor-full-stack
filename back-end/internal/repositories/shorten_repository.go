@@ -6,6 +6,7 @@ import (
 
 	"github.com/enzolazz/avaliacao-desenvolvedor-full-stack/back-end/internal/models"
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
@@ -48,4 +49,22 @@ func (r *ShortLinkRepository) GetByID(id string) (*models.ShortLink, error) {
 	}
 
 	return &link, nil
+}
+
+func (r *ShortLinkRepository) FindAllByUser(userID primitive.ObjectID) ([]models.ShortLink, error) {
+	var links []models.ShortLink
+
+	filter := bson.M{"user_id": userID}
+
+	cursor, err := r.Collection.Find(context.TODO(), filter)
+	if err != nil {
+		return nil, err
+	}
+	defer cursor.Close(context.TODO())
+
+	if err := cursor.All(context.TODO(), &links); err != nil {
+		return nil, err
+	}
+
+	return links, nil
 }
