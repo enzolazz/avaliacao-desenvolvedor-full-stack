@@ -4,7 +4,6 @@ export type ShortURL = {
   id: string;
   label: string;
   original_url: string;
-  short_url: string;
   status: "active" | "disabled";
 };
 

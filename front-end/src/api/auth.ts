@@ -7,6 +7,7 @@ import type {
   RegisterResponse,
 } from "./types/auth";
 import type { ShortenRequest, ShortenResponse } from "./types/url";
+import type { ShortURL } from "@/types/url";
 
 export class ApiError extends Error {
   status: number;
@@ -68,6 +69,24 @@ export const apiClient = {
           error instanceof Error
             ? `Erro inesperado: ${error.message}`
             : "Erro inesperado ao encurtar URL.",
+        );
+      }
+    },
+    async getAllLinks(): Promise<ShortURL[]> {
+      try {
+        const token = localStorage.getItem("token");
+        const response = await api.get<ShortURL[]>("/shorten", {
+          headers: token ? { Authorization: `Bearer ${token}` } : {},
+        });
+
+        return response.data;
+      } catch (error: unknown) {
+        returnErrors(error);
+
+        throw new Error(
+          error instanceof Error
+            ? `Erro inesperado: ${error.message}`
+            : "Erro inesperado ao buscar URLs.",
         );
       }
     },
