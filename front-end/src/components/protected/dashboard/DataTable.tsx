@@ -82,11 +82,11 @@ export function DataTable<TData, TValue>({
             {table.getRowModel().rows?.length ? (
               table.getRowModel().rows.map((row) => (
                 <TableRow
-                  key={row.id}
+                  key={row.getValue("id")}
                   data-state={row.getIsSelected() && "selected"}
                   className="cursor-pointer"
                   onClick={() => {
-                    navigate("/dashboard/metrics/" + row.id);
+                    navigate("/dashboard/metrics/" + row.getValue("id"));
                   }}
                 >
                   {row.getVisibleCells().map((cell) => (
