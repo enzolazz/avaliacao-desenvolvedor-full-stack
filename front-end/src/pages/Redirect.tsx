@@ -33,5 +33,12 @@ export default function Redirect() {
     fetchURL();
   }, [id, navigate]);
 
-  return <div>Redirecionando...</div>;
+  return (
+    <div className="h-screen w-full flex flex-col justify-center items-center gap-12">
+      <h1 className="text-7xl text-muted-foreground">Redirecionando...</h1>
+      <p className="text-xl text-muted-foreground">
+        Aguarde um momento, estamos te redirecionando...
+      </p>
+    </div>
+  );
 }
