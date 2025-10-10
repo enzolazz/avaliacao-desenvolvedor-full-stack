@@ -92,7 +92,7 @@ export default function Metrics() {
               Selecionar URL:
               <Select value={currentId} onValueChange={setCurrentId}>
                 <SelectTrigger className="w-40">
-                  <SelectValue placeholder="Selecionar intervalo" />
+                  <SelectValue placeholder="Selecionar URL" />
                 </SelectTrigger>
                 <SelectContent>
                   {data
