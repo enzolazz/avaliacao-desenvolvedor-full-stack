@@ -6,3 +6,7 @@ export interface ShortenRequest {
 export interface ShortenResponse {
   id: string;
 }
+
+export interface RedirectResponse {
+  url: string;
+}
