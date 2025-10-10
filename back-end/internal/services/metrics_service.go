@@ -23,3 +23,15 @@ func (s *MetricsService) TrackRedirect(shortLinkID string) error {
 
 	return s.Repo.Insert(metric)
 }
+
+func (s *MetricsService) CountLastHour(shortLinkID string) ([]map[string]any, error) {
+	return s.Repo.CountLastHour(shortLinkID)
+}
+
+func (s *MetricsService) CountLastDay(shortLinkID string) ([]map[string]any, error) {
+	return s.Repo.CountLastDay(shortLinkID)
+}
+
+func (s *MetricsService) CountLastMonth(shortLinkID string) ([]map[string]any, error) {
+	return s.Repo.CountLastMonth(shortLinkID)
+}

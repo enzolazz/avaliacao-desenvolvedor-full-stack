@@ -11,6 +11,7 @@ import type {
   ShortenRequest,
   ShortenResponse,
 } from "./types/url";
+import type { MetricData } from "./types/metric";
 import type { ShortURL } from "@/types/url";
 
 export class ApiError extends Error {
@@ -107,6 +108,30 @@ export const apiClient = {
           error instanceof Error
             ? `Erro inesperado: ${error.message}`
             : "Erro inesperado ao buscar URLs.",
+        );
+      }
+    },
+  },
+  metrics: {
+    async getMetrics(id: string, filter: string): Promise<MetricData[]> {
+      try {
+        const token = localStorage.getItem("token");
+
+        const { data } = await api.get<MetricData[]>(
+          `/metrics/${filter}/${id}`,
+          {
+            headers: token ? { Authorization: `Bearer ${token}` } : {},
+          },
+        );
+
+        return data;
+      } catch (error: unknown) {
+        returnErrors(error);
+
+        throw new Error(
+          error instanceof Error
+            ? `Erro inesperado: ${error.message}`
+            : "Erro inesperado ao encurtar URL.",
         );
       }
     },

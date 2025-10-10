@@ -22,7 +22,7 @@ export function Header({ title }: HeaderProps) {
   const { user, logout } = useAuth();
 
   return (
-    <div className="w-full bg-sidebar h-16 flex justify-between items-center px-6">
+    <div className="w-full bg-sidebar h-16 flex justify-between items-center px-6 border-b border-border">
       <div className="flex items-center gap-6 text-xl font-bold">
         <SidebarTrigger />
         {title}
@@ -31,7 +31,9 @@ export function Header({ title }: HeaderProps) {
         <DropdownMenuTrigger asChild>
           <Avatar className="size-10 cursor-pointer">
             <AvatarFallback className="bg-primary">
-              {(user?.name && user.name.length > 0) ? user.name[0].toUpperCase() : "?"}
+              {user?.name && user.name.length > 0
+                ? user.name[0].toUpperCase()
+                : "?"}
             </AvatarFallback>
           </Avatar>
         </DropdownMenuTrigger>

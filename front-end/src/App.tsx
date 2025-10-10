@@ -10,6 +10,8 @@ import NotFound from "@/pages/NotFound";
 import Profile from "@/pages/Profile";
 import { BrowserRouter, Navigate, Route, Routes } from "react-router";
 import Redirect from "@/pages/Redirect";
+import Metrics from "@/pages/Metrics";
+import Forbidden from "@/pages/Forbidden";
 
 function App() {
   return (
@@ -30,8 +32,10 @@ function App() {
             >
               <Route index element={<Dashboard />} />
               <Route path="profile" element={<Profile />} />
+              <Route path="metrics/:id?" element={<Metrics />} />
             </Route>
             <Route path="404" element={<NotFound />} />
+            <Route path="403" element={<Forbidden />} />
             <Route path="/:id" element={<Redirect />} />
             <Route path="*" element={<NotFound />} />
           </Routes>

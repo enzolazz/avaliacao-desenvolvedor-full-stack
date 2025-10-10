@@ -86,7 +86,8 @@ export function DataTable<TData, TValue>({
                   data-state={row.getIsSelected() && "selected"}
                   className="cursor-pointer"
                   onClick={() => {
-                    navigate("/dashboard/metrics/" + row.getValue("id"));
+                    if (row.getValue("status") === "active")
+                      navigate("/dashboard/metrics/" + row.getValue("id"));
                   }}
                 >
                   {row.getVisibleCells().map((cell) => (

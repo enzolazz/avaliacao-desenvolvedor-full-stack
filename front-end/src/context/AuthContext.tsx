@@ -1,6 +1,5 @@
-// src/context/AuthContext.tsx
 import { useState, type ReactNode } from "react";
-import { apiClient } from "@/api/auth";
+import { apiClient } from "@/api/client";
 import type {
   LoginRequest,
   LoginResponse,
