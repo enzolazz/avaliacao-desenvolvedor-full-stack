@@ -10,12 +10,13 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Link2 } from "lucide-react";
 import { type UseFormReturn, useForm } from "react-hook-form";
 import { ShortenForm } from "./ShortenForm";
-import { apiClient, ApiError } from "@/api/auth";
+import { apiClient, ApiError } from "@/api/client";
 import { toast } from "sonner";
-import { useNavigate } from "react-router";
+import { useData } from "@/hooks/use-data";
 
 export function ShortenCard() {
-  const navigate = useNavigate();
+  const { refresh } = useData();
+
   const form: UseFormReturn<URLFormValues> = useForm({
     resolver: zodResolver(urlFormSchema),
     defaultValues: { label: "", url: "" },
@@ -23,11 +24,11 @@ export function ShortenCard() {
 
   const onSubmit = async (values: URLFormValues) => {
     try {
-      const data = await apiClient.url.shorten(values);
+      await apiClient.url.shorten(values);
       toast.success("URL encurtada!");
 
       form.reset();
-      navigate("/dashboard/metrics/" + data.id);
+      refresh();
     } catch (err: unknown) {
       if (err instanceof ApiError) {
         form.setError("url", {

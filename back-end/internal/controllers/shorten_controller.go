@@ -80,17 +80,3 @@ func (c *ShortLinkController) GetAllByUser(ctx *gin.Context) {
 
 	ctx.JSON(http.StatusOK, links)
 }
-
-func (c *ShortLinkController) Redirect(ctx *gin.Context) {
-	id := ctx.Param("id")
-
-	link, err := c.Service.GetByID(id)
-	if err != nil {
-		ctx.JSON(http.StatusNotFound, gin.H{"error": "short link not found"})
-		return
-	}
-
-	ctx.JSON(http.StatusOK, gin.H{
-		"url": link.OriginalURL,
-	})
-}

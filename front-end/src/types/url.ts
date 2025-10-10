@@ -10,7 +10,7 @@ export type ShortURL = {
 export const urlFormSchema = z.object({
   label: z
     .string("Apelido inválido")
-    .max(15, "Apelido deve ter no máximo 15 caracteres"),
+    .max(30, "Apelido deve ter no máximo 30 caracteres"),
   url: z.string("URL inválida").min(1, "URL é obrigatório"),
 });
 

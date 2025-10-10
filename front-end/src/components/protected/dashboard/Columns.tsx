@@ -2,6 +2,12 @@
 
 import { CopyButton } from "@/components/ui/copy-button";
 import type { ShortURL } from "@/types/url";
+import {
+  TooltipProvider,
+  Tooltip,
+  TooltipTrigger,
+  TooltipContent,
+} from "@/components/ui/tooltip";
 import type { ColumnDef } from "@tanstack/react-table";
 import { CircleCheck, CircleX } from "lucide-react";
 import { Link } from "react-router";
@@ -47,13 +53,22 @@ export const columns: ColumnDef<ShortURL>[] = [
       const original_url = row.getValue<string>("original_url");
 
       return (
-        <Link
-          to={original_url}
-          onClick={(e) => e.stopPropagation()}
-          className="text-primary"
-        >
-          {truncate(original_url, 30)}
-        </Link>
+        <TooltipProvider delayDuration={100}>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Link
+                to={original_url}
+                onClick={(e) => e.stopPropagation()}
+                className="text-primary"
+              >
+                {truncate(original_url, 30)}
+              </Link>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>{original_url}</p>
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
       );
     },
   },

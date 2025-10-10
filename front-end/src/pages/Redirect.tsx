@@ -1,4 +1,4 @@
-import { apiClient } from "@/api/auth";
+import { apiClient } from "@/api/client";
 import { useEffect, useRef } from "react";
 import { useNavigate, useParams } from "react-router";
 

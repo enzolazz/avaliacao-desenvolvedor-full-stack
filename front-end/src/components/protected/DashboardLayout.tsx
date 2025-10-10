@@ -12,14 +12,20 @@ import {
 } from "@/components/ui/sidebar";
 import { Header } from "./Header";
 import { Link, Outlet, useLocation } from "react-router";
-import { Link2, User } from "lucide-react";
+import { ChartColumn, Link2, User } from "lucide-react";
 import { ThemeToggle } from "../ThemeToggle";
+import { DataProvider } from "@/context/DataContext";
 
 const items = [
   {
     title: "URLs",
     url: "/dashboard",
     icon: Link2,
+  },
+  {
+    title: "Metrics",
+    url: "/dashboard/metrics",
+    icon: ChartColumn,
   },
   {
     title: "Perfil",
@@ -87,9 +93,11 @@ export function DashboardLayout() {
         <header className="flex-shrink-0">
           <Header title={title} />
         </header>
-        <main className="flex-1 overflow-y-auto">
-          <Outlet />
-        </main>
+        <DataProvider>
+          <main className="flex-1 overflow-y-auto">
+            <Outlet />
+          </main>
+        </DataProvider>
       </div>
     </SidebarProvider>
   );

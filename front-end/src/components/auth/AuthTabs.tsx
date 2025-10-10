@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { toast } from "sonner";
 import { useNavigate } from "react-router";
-import { ApiError } from "@/api/auth";
+import { ApiError } from "@/api/client";
 import { LoginForm } from "./LoginForm";
 import { RegisterForm } from "./RegisterForm";
 import { registerFormSchema, loginFormSchema } from "@/types/auth";

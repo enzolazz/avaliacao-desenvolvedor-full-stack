@@ -7,43 +7,12 @@ import {
 } from "@/components/ui/card";
 import { Link2, TableOfContents } from "lucide-react";
 import { DataTable } from "./DataTable";
-import type { ShortURL } from "@/types/url";
 import { columns } from "./Columns";
-import { useState, useEffect, useRef } from "react";
-import { apiClient, ApiError } from "@/api/auth";
-import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
+import { useData } from "@/hooks/use-data";
 
 export function UserURLs() {
-  const [data, setData] = useState<ShortURL[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(false);
-  const fetchedRef = useRef(false);
-
-  const fetchData = async () => {
-    setLoading(true);
-    setError(false);
-    try {
-      const result = await apiClient.url.getAllLinks();
-      setData(result || []);
-    } catch (err: unknown) {
-      setError(true);
-      if (err instanceof ApiError) {
-        toast.error(err.message);
-      } else {
-        toast.error("Erro inesperado ao carregar URLs");
-      }
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    if (fetchedRef.current) return;
-    fetchedRef.current = true;
-
-    fetchData();
-  }, []);
+  const { data, loading, error, refresh } = useData();
 
   const renderContent = () => {
     if (loading) {
@@ -54,7 +23,7 @@ export function UserURLs() {
       return (
         <>
           <p className="text-destructive mb-4">Erro ao carregar suas URLs</p>
-          <Button onClick={fetchData}>Tentar novamente</Button>
+          <Button onClick={refresh}>Tentar novamente</Button>
         </>
       );
     }
