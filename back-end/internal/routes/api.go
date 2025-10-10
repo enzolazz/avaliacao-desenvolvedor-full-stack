@@ -41,6 +41,7 @@ func RegisterRoutes(r *gin.Engine, jwtSecret string) {
 		shortlinks := api.Group("/shorten")
 		shortlinks.Use(middleware.JWTMiddleware(jwtSecret))
 		shortlinks.POST("", shortLinkController.Create)
+		shortlinks.GET("", shortLinkController.GetAll)
 
 	}
 	// Public search route
