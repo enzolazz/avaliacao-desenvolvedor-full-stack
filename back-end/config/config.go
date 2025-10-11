@@ -25,6 +25,8 @@ type Constants struct {
 	HealthCheckInterval time.Duration
 	IsAliveTimeout      time.Duration
 	CorsMaxAge          time.Duration
+	MaxInactiveFailures int
+	MaxGoRoutines       int
 }
 
 func GetConfig() *Config {
@@ -61,6 +63,8 @@ func GetConstants() *Constants {
 		HealthCheckInterval: 10 * time.Minute,
 		IsAliveTimeout:      5 * time.Second,
 		CorsMaxAge:          12 * time.Hour,
+		MaxInactiveFailures: 5,
+		MaxGoRoutines:       10,
 	}
 
 	return constants

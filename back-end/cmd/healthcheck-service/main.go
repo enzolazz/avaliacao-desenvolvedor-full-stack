@@ -47,7 +47,7 @@ func main() {
 			continue
 		}
 
-		sem := make(chan struct{}, 10)
+		sem := make(chan struct{}, config.GetConstants().MaxGoRoutines)
 		for _, link := range links {
 			sem <- struct{}{}
 			go func(l models.ShortLink) {
@@ -63,14 +63,12 @@ func main() {
 }
 
 func checkAndPublish(ps *pubsub.RedisPubSub, coll *mongo.Collection, link models.ShortLink) {
-	const maxFailures = 5
-
 	status := "active"
 	inactiveCount := link.InactiveCount
 
 	if !utils.IsURLAlive(link.OriginalURL) {
 		inactiveCount++
-		if inactiveCount >= maxFailures {
+		if inactiveCount >= config.GetConstants().MaxInactiveFailures {
 			status = "inactive"
 		}
 	} else {
