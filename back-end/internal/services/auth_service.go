@@ -29,13 +29,13 @@ func (s *AuthService) Login(username, password string) (string, string, *models.
 	accessToken := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
 		"user_id":  user.ID.Hex(),
 		"username": user.Username,
-		"exp":      time.Now().Add(config.GetConstants().AccessTokenExp).Unix(),
+		"exp":      time.Now().Add(config.Consts.AccessTokenExp).Unix(),
 	})
 
 	refreshToken := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
 		"user_id":  user.ID.Hex(),
 		"username": user.Username,
-		"exp":      time.Now().Add(config.GetConstants().RefreshTokenExp).Unix(),
+		"exp":      time.Now().Add(config.Consts.RefreshTokenExp).Unix(),
 	})
 
 	accessSignedToken, err := accessToken.SignedString([]byte(s.JWTSecret))
@@ -90,13 +90,13 @@ func (s *AuthService) RotateRefreshToken(refreshToken string) (string, string, e
 	newAccess := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
 		"user_id":  userID,
 		"username": username,
-		"exp":      time.Now().Add(config.GetConstants().AccessTokenExp).Unix(),
+		"exp":      time.Now().Add(config.Consts.AccessTokenExp).Unix(),
 	})
 
 	newRefresh := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
 		"user_id":  userID,
 		"username": username,
-		"exp":      time.Now().Add(config.GetConstants().RefreshTokenExp).Unix(),
+		"exp":      time.Now().Add(config.Consts.RefreshTokenExp).Unix(),
 	})
 
 	accessSigned, err := newAccess.SignedString([]byte(s.JWTSecret))

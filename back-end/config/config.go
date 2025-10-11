@@ -3,7 +3,7 @@ package config
 import (
 	"log"
 	"os"
-	"time"
+	"sync"
 
 	"github.com/joho/godotenv"
 )
@@ -17,45 +17,28 @@ type Config struct {
 	JWTSecret      string
 }
 
-type Constants struct {
-	AccessTokenExp      time.Duration
-	RefreshTokenExp     time.Duration
-	HealthCheckInterval time.Duration
-	IsAliveTimeout      time.Duration
-	CorsMaxAge          time.Duration
-	MaxInactiveFailures int
-	MaxGoRoutines       int
-}
+var (
+	Cfg     *Config
+	cfgOnce sync.Once
+)
 
-func GetConfig() *Config {
-	_ = godotenv.Load()
+func InitConfig() {
+	cfgOnce.Do(func() {
+		if err := godotenv.Load(); err != nil {
+			log.Println("No .env file found, using system environment variables")
+		}
 
-	cfg := &Config{
-		FrontendServer: getEnv("FRONTEND_SERVER"),
-		MongoURI:       getEnv("MONGODB_URI"),
-		DBName:         getEnv("DB_NAME"),
-		RedisURI:       getEnv("REDIS_URI"),
-		ServerPort:     getEnv("SERVER_PORT"),
-		JWTSecret:      getEnv("JWT_SECRET"),
-	}
+		Cfg = &Config{
+			FrontendServer: getEnv("FRONTEND_SERVER"),
+			MongoURI:       getEnv("MONGODB_URI"),
+			DBName:         getEnv("DB_NAME"),
+			RedisURI:       getEnv("REDIS_URI"),
+			ServerPort:     getEnv("SERVER_PORT"),
+			JWTSecret:      getEnv("JWT_SECRET"),
+		}
 
-	log.Println("Loaded environment config!")
-
-	return cfg
-}
-
-func GetConstants() *Constants {
-	constants := &Constants{
-		AccessTokenExp:      1 * time.Hour,
-		RefreshTokenExp:     30 * 24 * time.Hour,
-		HealthCheckInterval: 10 * time.Minute,
-		IsAliveTimeout:      5 * time.Second,
-		CorsMaxAge:          12 * time.Hour,
-		MaxInactiveFailures: 5,
-		MaxGoRoutines:       10,
-	}
-
-	return constants
+		log.Println("Loaded environment config successfully!")
+	})
 }
 
 func getEnv(key string) string {

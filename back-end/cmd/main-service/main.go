@@ -11,21 +11,13 @@ import (
 
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
-	"github.com/joho/godotenv"
 )
 
 func main() {
-	err := godotenv.Load()
-	if err != nil {
-		log.Fatal("Error loading .env from project root!")
-	}
+	db.ConnectMongoDB(config.Cfg.MongoURI, config.Cfg.DBName)
+	linksCollection := db.Client.Database(config.Cfg.DBName).Collection("shortlinks")
 
-	cfg := config.GetConfig()
-
-	db.ConnectMongoDB(cfg.MongoURI, cfg.DBName)
-	linksCollection := db.Client.Database(cfg.DBName).Collection("shortlinks")
-
-	ps := pubsub.NewRedisPubSub(cfg)
+	ps := pubsub.NewRedisPubSub()
 
 	unsubscribe, err := handlers.HandleLinkStatusUpdates(ps, linksCollection)
 	if err != nil {
@@ -35,16 +27,16 @@ func main() {
 
 	r := gin.Default()
 	r.Use(cors.New(cors.Config{
-		AllowOrigins:     []string{config.GetConfig().FrontendServer},
+		AllowOrigins:     []string{config.Cfg.FrontendServer},
 		AllowMethods:     []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
 		AllowHeaders:     []string{"Origin", "Content-Type", "Authorization"},
 		ExposeHeaders:    []string{"Content-Length"},
 		AllowCredentials: true,
-		MaxAge:           config.GetConstants().CorsMaxAge,
+		MaxAge:           config.Consts.CorsMaxAge,
 	}))
 
-	routes.RegisterRoutes(r, cfg.JWTSecret)
-	r.GET("/updates/ws", middleware.JWTMiddleware(cfg.JWTSecret), handlers.WebSocketHandler(ps))
+	routes.RegisterRoutes(r, config.Cfg.JWTSecret)
+	r.GET("/updates/ws", middleware.JWTMiddleware(config.Cfg.JWTSecret), handlers.WebSocketHandler(ps))
 
-	r.Run(":" + cfg.ServerPort)
+	r.Run(":" + config.Cfg.ServerPort)
 }

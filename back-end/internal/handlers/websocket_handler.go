@@ -13,7 +13,7 @@ import (
 )
 
 var allowedOrigins = map[string]bool{
-	config.GetConfig().FrontendServer: true,
+	config.Cfg.FrontendServer: true,
 }
 
 var wsUpgrader = websocket.Upgrader{

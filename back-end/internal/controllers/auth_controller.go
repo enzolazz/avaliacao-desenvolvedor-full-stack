@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"net/http"
+	"strings"
 	"time"
 	"url-shortener/back-end/config"
 	"url-shortener/back-end/internal/dtos"
@@ -34,7 +35,7 @@ func (c *AuthController) Login(ctx *gin.Context) {
 	http.SetCookie(ctx.Writer, &http.Cookie{
 		Name:    "access_token",
 		Value:   accessToken,
-		Expires: time.Now().Add(config.GetConstants().AccessTokenExp),
+		Expires: time.Now().Add(config.Consts.AccessTokenExp),
 		Path:    "/",
 		// Domain:   domain, // Uncomment for production
 		Secure:   true,
@@ -45,7 +46,7 @@ func (c *AuthController) Login(ctx *gin.Context) {
 	http.SetCookie(ctx.Writer, &http.Cookie{
 		Name:    "refresh_token",
 		Value:   refreshToken,
-		Expires: time.Now().Add(config.GetConstants().RefreshTokenExp),
+		Expires: time.Now().Add(config.Consts.RefreshTokenExp),
 		Path:    "/",
 		// Domain:   domain, // Uncomment for production
 		Secure:   true,
@@ -76,24 +77,26 @@ func (c *AuthController) Refresh(ctx *gin.Context) {
 		return
 	}
 
+	secure, domain := getDomain()
+
 	http.SetCookie(ctx.Writer, &http.Cookie{
-		Name:    "access_token",
-		Value:   accessToken,
-		Expires: time.Now().Add(config.GetConstants().AccessTokenExp),
-		Path:    "/",
-		// Domain:   domain, // Uncomment for production
-		Secure:   true,
+		Name:     "access_token",
+		Value:    accessToken,
+		Expires:  time.Now().Add(config.Consts.AccessTokenExp),
+		Path:     "/",
+		Domain:   domain,
+		Secure:   secure,
 		HttpOnly: true,
 		SameSite: http.SameSiteLaxMode,
 	})
 
 	http.SetCookie(ctx.Writer, &http.Cookie{
-		Name:    "refresh_token",
-		Value:   refreshToken,
-		Expires: time.Now().Add(config.GetConstants().RefreshTokenExp),
-		Path:    "/",
-		// Domain:   domain, // Uncomment for production
-		Secure:   true,
+		Name:     "refresh_token",
+		Value:    refreshToken,
+		Expires:  time.Now().Add(config.Consts.RefreshTokenExp),
+		Path:     "/",
+		Domain:   domain,
+		Secure:   secure,
 		HttpOnly: true,
 		SameSite: http.SameSiteLaxMode,
 	})
@@ -109,4 +112,23 @@ func (s *AuthController) Logout(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, gin.H{
 		"message": "Logout realizado com sucesso",
 	})
+}
+
+func getDomain() (bool, string) {
+	frontendURL := config.Cfg.FrontendServer
+
+	secure := false
+	domain := frontendURL
+
+	if strings.HasPrefix(frontendURL, "https://") {
+		secure = true
+		domain = strings.TrimPrefix(frontendURL, "https://")
+	} else if strings.HasPrefix(frontendURL, "http://") {
+		secure = false
+		domain = strings.TrimPrefix(frontendURL, "http://")
+	}
+
+	domain = strings.TrimSuffix(domain, "/")
+
+	return secure, domain
 }

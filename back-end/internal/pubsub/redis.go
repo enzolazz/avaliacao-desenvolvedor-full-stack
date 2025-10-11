@@ -14,8 +14,8 @@ type RedisPubSub struct {
 	Ctx    context.Context
 }
 
-func NewRedisPubSub(cfg *config.Config) *RedisPubSub {
-	options, err := redis.ParseURL(cfg.RedisURI)
+func NewRedisPubSub() *RedisPubSub {
+	options, err := redis.ParseURL(config.Cfg.RedisURI)
 	if err != nil {
 		log.Fatalf("Erro ao parsear REDIS_URI: %v", err)
 	}
