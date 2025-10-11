@@ -4,7 +4,7 @@ export function DataTableSkeleton() {
   return (
     <div className="w-full h-full flex flex-col gap-6">
       <Skeleton className="w-full h-8" />
-      <Skeleton className="w-full h-72 flex flex-col justify-between"></Skeleton>
+      <Skeleton className="w-full h-72" />
     </div>
   );
 }
