@@ -3,7 +3,6 @@ package config
 import (
 	"log"
 	"os"
-	"strconv"
 	"time"
 
 	"github.com/joho/godotenv"
@@ -13,9 +12,7 @@ type Config struct {
 	FrontendServer string
 	MongoURI       string
 	DBName         string
-	RedisAddr      string
-	RedisPassword  string
-	RedisDB        int
+	RedisURI       string
 	ServerPort     string
 	JWTSecret      string
 }
@@ -33,22 +30,11 @@ type Constants struct {
 func GetConfig() *Config {
 	_ = godotenv.Load()
 
-	redisDB := 0
-	if val := os.Getenv("REDIS_DB"); val != "" {
-		db, err := strconv.Atoi(val)
-		if err != nil {
-			log.Fatalf("Invalid REDIS_DB value: %v", err)
-		}
-		redisDB = db
-	}
-
 	cfg := &Config{
 		FrontendServer: getEnv("FRONTEND_SERVER"),
 		MongoURI:       getEnv("MONGODB_URI"),
 		DBName:         getEnv("DB_NAME"),
-		RedisAddr:      getEnv("REDIS_ADDR"),
-		RedisPassword:  os.Getenv("REDIS_PASSWORD"),
-		RedisDB:        redisDB,
+		RedisURI:       getEnv("REDIS_URI"),
 		ServerPort:     getEnv("SERVER_PORT"),
 		JWTSecret:      getEnv("JWT_SECRET"),
 	}

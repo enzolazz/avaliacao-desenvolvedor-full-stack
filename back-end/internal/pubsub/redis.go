@@ -3,6 +3,7 @@ package pubsub
 import (
 	"context"
 	"fmt"
+	"log"
 	"url-shortener/back-end/config"
 
 	"github.com/redis/go-redis/v9"
@@ -14,14 +15,17 @@ type RedisPubSub struct {
 }
 
 func NewRedisPubSub(cfg *config.Config) *RedisPubSub {
-	rdb := redis.NewClient(&redis.Options{
-		Addr:     cfg.RedisAddr,
-		Password: cfg.RedisPassword,
-		DB:       cfg.RedisDB,
-	})
+	options, err := redis.ParseURL(cfg.RedisURI)
+	if err != nil {
+		log.Fatalf("Erro ao parsear REDIS_URI: %v", err)
+	}
+
+	rdb := redis.NewClient(options)
 
 	if err := rdb.Ping(context.Background()).Err(); err != nil {
 		panic(fmt.Sprintf("Redis connection failed: %v", err))
+	} else {
+		log.Println("Connected to Redis")
 	}
 
 	return &RedisPubSub{
