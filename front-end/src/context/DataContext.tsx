@@ -37,14 +37,15 @@ export function DataProvider({ children }: { children: ReactNode }) {
       /^http?:\/\//,
       "",
     );
-    const ws = new WebSocket(`ws://${backend}/updates/ws`);
-    wsRef.current = ws;
 
     const connect = () => {
+      const ws = new WebSocket(`ws://${backend}/updates/ws`);
+      wsRef.current = ws;
       ws.onopen = () => console.log("WebSocket connected");
       ws.onmessage = () => fetchData();
       ws.onclose = () => {
         console.log("WebSocket disconnected. Reconnecting...");
+        wsRef.current = null;
         setTimeout(() => {
           if (!wsRef.current) connect();
         }, 3000);
