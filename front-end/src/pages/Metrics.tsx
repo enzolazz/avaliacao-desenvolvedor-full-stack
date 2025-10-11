@@ -1,4 +1,5 @@
 import MetricsDashboard from "@/components/protected/metrics/MetricsDashboard";
+import { MetricsSkeleton } from "@/components/protected/metrics/MetricsSkeleton";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
@@ -56,15 +57,22 @@ export default function Metrics() {
 
   const renderContent = () => {
     if (loading) {
-      return <div className="text-muted-foreground">Carregando...</div>;
+      return <MetricsSkeleton />;
     }
 
     if (error) {
       return (
-        <>
+        <div className="h-full w-full flex flex-col items-center justify-center">
           <p className="text-destructive mb-4">Erro ao carregar suas URLs</p>
-          <Button onClick={refresh}>Tentar novamente</Button>
-        </>
+          <Button
+            onClick={() => {
+              refresh();
+              navigate(0);
+            }}
+          >
+            Tentar novamente
+          </Button>
+        </div>
       );
     }
 
@@ -142,7 +150,7 @@ export default function Metrics() {
   };
 
   return (
-    <div className="w-full max-w-screen-xl mx-auto space-y-8 p-4">
+    <div className="w-full h-full max-w-screen-xl mx-auto space-y-8 p-4">
       {renderContent()}
     </div>
   );

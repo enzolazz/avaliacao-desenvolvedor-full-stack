@@ -10,13 +10,14 @@ import { DataTable } from "./DataTable";
 import { columns } from "./Columns";
 import { Button } from "@/components/ui/button";
 import { useData } from "@/hooks/use-data";
+import { DataTableSkeleton } from "./DataTableSkeleton";
 
 export function UserURLs() {
   const { data, loading, error, refresh } = useData();
 
   const renderContent = () => {
     if (loading) {
-      return <div className="text-muted-foreground">Carregando...</div>;
+      return <DataTableSkeleton />;
     }
 
     if (error) {
@@ -50,15 +51,11 @@ export function UserURLs() {
         <CardTitle className="flex gap-4 items-center text-xl">
           <TableOfContents /> Suas URLs encurtadas
         </CardTitle>
-        {!loading && !error && (
-          <CardDescription>
-            Gerencie todas as suas URLs encurtadas
-          </CardDescription>
-        )}
+        <CardDescription>
+          Gerencie todas as suas URLs encurtadas
+        </CardDescription>
       </CardHeader>
-      <CardContent
-        className={`${data.length > 0 ? "w-full overflow-x-auto" : "flex flex-col items-center justify-center py-12 text-center"}`}
-      >
+      <CardContent className="w-full overflow-x-auto">
         {renderContent()}
       </CardContent>
     </Card>
