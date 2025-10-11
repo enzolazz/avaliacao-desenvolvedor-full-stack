@@ -7,7 +7,7 @@ import (
 
 func IsURLAlive(url string) bool {
 	client := http.Client{
-		Timeout: config.Consts.HealthCheckInterval,
+		Timeout: config.Consts.IsAliveTimeout,
 	}
 	resp, err := client.Get(url)
 	if err != nil {

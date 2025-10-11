@@ -2,11 +2,11 @@ package controllers
 
 import (
 	"net/http"
-	"strings"
 	"time"
 	"url-shortener/back-end/config"
 	"url-shortener/back-end/internal/dtos"
 	"url-shortener/back-end/internal/services"
+	"url-shortener/back-end/internal/utils"
 
 	"github.com/gin-gonic/gin"
 )
@@ -77,7 +77,7 @@ func (c *AuthController) Refresh(ctx *gin.Context) {
 		return
 	}
 
-	secure, domain := getDomain()
+	secure, domain := utils.GetDomain()
 
 	http.SetCookie(ctx.Writer, &http.Cookie{
 		Name:     "access_token",
@@ -112,23 +112,4 @@ func (s *AuthController) Logout(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, gin.H{
 		"message": "Logout realizado com sucesso",
 	})
-}
-
-func getDomain() (bool, string) {
-	frontendURL := config.Cfg.FrontendServer
-
-	secure := false
-	domain := frontendURL
-
-	if strings.HasPrefix(frontendURL, "https://") {
-		secure = true
-		domain = strings.TrimPrefix(frontendURL, "https://")
-	} else if strings.HasPrefix(frontendURL, "http://") {
-		secure = false
-		domain = strings.TrimPrefix(frontendURL, "http://")
-	}
-
-	domain = strings.TrimSuffix(domain, "/")
-
-	return secure, domain
 }
