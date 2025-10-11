@@ -14,6 +14,7 @@ type ShortLink struct {
 	Status        string             `bson:"status" json:"status"`
 	InactiveCount int                `bson:"inactive_count" json:"inactive_count"`
 	CreatedAt     time.Time          `bson:"created_at" json:"created_at"`
+	LastCheckedAt time.Time          `bson:"last_checked_at" json:"last_checked_at"`
 }
 
 func NewShortLink(userID primitive.ObjectID, id, originalURL, label string) ShortLink {
@@ -24,6 +25,7 @@ func NewShortLink(userID primitive.ObjectID, id, originalURL, label string) Shor
 		Label:         label,
 		Status:        "active",
 		InactiveCount: 0,
-		CreatedAt:     time.Now(),
+		CreatedAt:     time.Now().UTC(),
+		LastCheckedAt: time.Now().UTC(),
 	}
 }

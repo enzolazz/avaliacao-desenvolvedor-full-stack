@@ -2,9 +2,10 @@ package controllers
 
 import (
 	"net/http"
+	"time"
+	"url-shortener/back-end/internal/dtos"
+	"url-shortener/back-end/internal/services"
 
-	"github.com/enzolazz/avaliacao-desenvolvedor-full-stack/back-end/internal/dtos"
-	"github.com/enzolazz/avaliacao-desenvolvedor-full-stack/back-end/internal/services"
 	"github.com/gin-gonic/gin"
 )
 
@@ -29,10 +30,20 @@ func (c *AuthController) Login(ctx *gin.Context) {
 		return
 	}
 
+	http.SetCookie(ctx.Writer, &http.Cookie{
+		Name:    "token",
+		Value:   token,
+		Expires: time.Now().Add(time.Hour * 1),
+		Path:    "/",
+		// Domain:   domain, // Uncomment for production
+		// Secure:   secure, // Uncomment for production
+		HttpOnly: true,
+		SameSite: http.SameSiteLaxMode,
+	})
+
 	ctx.JSON(http.StatusOK, dtos.LoginResponse{
-		Token: token,
 		User: dtos.UserInfoResponse{
-			ID:       user.ID.String(),
+			ID:       user.ID.Hex(),
 			Name:     user.Name,
 			Surname:  user.Surname,
 			Username: user.Username,

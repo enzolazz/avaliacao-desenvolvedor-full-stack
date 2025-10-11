@@ -3,9 +3,9 @@ package services
 import (
 	"errors"
 	"time"
+	"url-shortener/back-end/internal/models"
+	"url-shortener/back-end/internal/repositories"
 
-	"github.com/enzolazz/avaliacao-desenvolvedor-full-stack/back-end/internal/models"
-	"github.com/enzolazz/avaliacao-desenvolvedor-full-stack/back-end/internal/repositories"
 	"github.com/golang-jwt/jwt/v5"
 	"golang.org/x/crypto/bcrypt"
 )
@@ -25,7 +25,6 @@ func (s *AuthService) Login(username, password string) (string, *models.User, er
 		return "", nil, errors.New("nome de usuário ou senha inválida")
 	}
 
-	// Always store the ObjectID as a hex string in the token
 	token := newToken(user.ID.Hex(), user.Username)
 
 	signedToken, err := token.SignedString([]byte(s.JWTSecret))

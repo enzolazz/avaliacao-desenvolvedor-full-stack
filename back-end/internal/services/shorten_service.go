@@ -4,8 +4,8 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/enzolazz/avaliacao-desenvolvedor-full-stack/back-end/internal/models"
-	"github.com/enzolazz/avaliacao-desenvolvedor-full-stack/back-end/internal/repositories"
+	"url-shortener/back-end/internal/models"
+	"url-shortener/back-end/internal/repositories"
 	"github.com/teris-io/shortid"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )

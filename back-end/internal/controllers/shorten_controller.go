@@ -2,11 +2,11 @@ package controllers
 
 import (
 	"net/http"
+	"url-shortener/back-end/internal/dtos"
+	"url-shortener/back-end/internal/services"
+	"url-shortener/back-end/internal/utils"
 
-	"github.com/enzolazz/avaliacao-desenvolvedor-full-stack/back-end/internal/dtos"
-	"github.com/enzolazz/avaliacao-desenvolvedor-full-stack/back-end/internal/services"
 	"github.com/gin-gonic/gin"
-	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 type ShortLinkController struct {
@@ -24,21 +24,14 @@ func (c *ShortLinkController) Create(ctx *gin.Context) {
 		return
 	}
 
-	userIDValue, exists := ctx.Get("user_id")
-	if !exists {
-		ctx.JSON(http.StatusUnauthorized, gin.H{"error": "unauthorized"})
-		return
-	}
-
-	userIDHex, ok := userIDValue.(string)
-	if !ok {
-		ctx.JSON(http.StatusUnauthorized, gin.H{"error": "invalid user_id"})
-		return
-	}
-
-	userID, err := primitive.ObjectIDFromHex(userIDHex)
+	userID, err := utils.GetUserIDFromContext(ctx)
 	if err != nil {
-		ctx.JSON(http.StatusUnauthorized, gin.H{"error": "invalid user_id format"})
+		return
+	}
+
+	alive := utils.IsURLAlive(input.OriginalURL)
+	if !alive {
+		ctx.JSON(http.StatusUnprocessableEntity, gin.H{"error": "URL inválida ou inativa"})
 		return
 	}
 
@@ -54,21 +47,8 @@ func (c *ShortLinkController) Create(ctx *gin.Context) {
 }
 
 func (c *ShortLinkController) GetAllByUser(ctx *gin.Context) {
-	userIDValue, exists := ctx.Get("user_id")
-	if !exists {
-		ctx.JSON(http.StatusUnauthorized, gin.H{"error": "unauthorized"})
-		return
-	}
-
-	userIDHex, ok := userIDValue.(string)
-	if !ok {
-		ctx.JSON(http.StatusUnauthorized, gin.H{"error": "invalid user_id"})
-		return
-	}
-
-	userID, err := primitive.ObjectIDFromHex(userIDHex)
+	userID, err := utils.GetUserIDFromContext(ctx)
 	if err != nil {
-		ctx.JSON(http.StatusUnauthorized, gin.H{"error": "invalid user_id format"})
 		return
 	}
 

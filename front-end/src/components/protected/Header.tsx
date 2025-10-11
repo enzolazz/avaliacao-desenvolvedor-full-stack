@@ -43,7 +43,7 @@ export function Header({ title }: HeaderProps) {
           </DropdownMenuLabel>
           <DropdownMenuGroup>
             <DropdownMenuItem asChild>
-              <Link to="/dashboard/profile">
+              <Link to="/dashboard/perfil">
                 <User /> Perfil
               </Link>
             </DropdownMenuItem>
