@@ -11,25 +11,17 @@ import (
 	"url-shortener/back-end/internal/pubsub"
 	"url-shortener/back-end/internal/utils"
 
-	"github.com/joho/godotenv"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
 func main() {
-	err := godotenv.Load()
-	if err != nil {
-		log.Fatal("Error loading .env from project root!")
-	}
+	db.ConnectMongoDB(config.Cfg.MongoURI, config.Cfg.DBName)
+	linksCollection := db.Client.Database(config.Cfg.DBName).Collection("shortlinks")
 
-	cfg := config.GetConfig()
+	ps := pubsub.NewRedisPubSub()
 
-	db.ConnectMongoDB(cfg.MongoURI, cfg.DBName)
-	linksCollection := db.Client.Database(cfg.DBName).Collection("shortlinks")
-
-	ps := pubsub.NewRedisPubSub(cfg)
-
-	ticker := time.NewTicker(config.GetConstants().HealthCheckInterval)
+	ticker := time.NewTicker(config.Consts.HealthCheckInterval)
 	defer ticker.Stop()
 
 	log.Println("Healthchecker service started")
@@ -47,7 +39,7 @@ func main() {
 			continue
 		}
 
-		sem := make(chan struct{}, config.GetConstants().MaxGoRoutines)
+		sem := make(chan struct{}, config.Consts.MaxGoRoutines)
 		for _, link := range links {
 			sem <- struct{}{}
 			go func(l models.ShortLink) {
@@ -68,7 +60,7 @@ func checkAndPublish(ps *pubsub.RedisPubSub, coll *mongo.Collection, link models
 
 	if !utils.IsURLAlive(link.OriginalURL) {
 		inactiveCount++
-		if inactiveCount >= config.GetConstants().MaxInactiveFailures {
+		if inactiveCount >= config.Consts.MaxInactiveFailures {
 			status = "inactive"
 		}
 	} else {

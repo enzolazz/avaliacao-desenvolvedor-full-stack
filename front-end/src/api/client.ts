@@ -4,7 +4,6 @@ import type {
   LoginRequest,
   LoginResponse,
   RegisterRequest,
-  RegisterResponse,
 } from "./types/auth";
 import type {
   RedirectResponse,
@@ -40,12 +39,9 @@ export const apiClient = {
       }
     },
 
-    async register(data: RegisterRequest): Promise<RegisterResponse> {
+    async register(data: RegisterRequest): Promise<LoginResponse> {
       try {
-        const response = await api.post<RegisterResponse>(
-          "/auth/register",
-          data,
-        );
+        const response = await api.post<LoginResponse>("/auth/register", data);
         return response.data;
       } catch (error: unknown) {
         returnErrors(error);

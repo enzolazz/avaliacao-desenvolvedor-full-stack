@@ -7,13 +7,6 @@ export interface RegisterRequest {
   password: string;
 }
 
-export interface RegisterResponse {
-  id: string;
-  name: string;
-  surname: string;
-  username: string;
-}
-
 export interface LoginRequest {
   username: string;
   password: string;

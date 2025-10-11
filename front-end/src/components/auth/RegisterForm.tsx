@@ -45,7 +45,11 @@ export function RegisterForm({ onSubmit, form }: RegisterFormProps) {
                 <FormItem>
                   <FormLabel>Nome</FormLabel>
                   <FormControl>
-                    <Input id="name" placeholder="Fulano Henrique" {...field} />
+                    <Input
+                      {...field}
+                      placeholder="Fulano Henrique"
+                      autoComplete="given-name"
+                    />
                   </FormControl>
 
                   <FormMessage />
@@ -60,9 +64,9 @@ export function RegisterForm({ onSubmit, form }: RegisterFormProps) {
                   <FormLabel>Sobrenome</FormLabel>
                   <FormControl>
                     <Input
-                      id="surname"
-                      placeholder="Costa da Silva"
                       {...field}
+                      placeholder="Costa da Silva"
+                      autoComplete="family-name"
                     />
                   </FormControl>
 
@@ -77,7 +81,7 @@ export function RegisterForm({ onSubmit, form }: RegisterFormProps) {
                 <FormItem>
                   <FormLabel>Nome de usuário</FormLabel>
                   <FormControl>
-                    <Input id="username" placeholder="fulano01" {...field} />
+                    <Input placeholder="fulano01" {...field} />
                   </FormControl>
 
                   <FormMessage />
@@ -92,10 +96,10 @@ export function RegisterForm({ onSubmit, form }: RegisterFormProps) {
                   <FormLabel>Senha</FormLabel>
                   <FormControl>
                     <Input
-                      id="password"
-                      placeholder="Uma senha forte"
                       {...field}
+                      placeholder="Uma senha forte"
                       type="password"
+                      autoComplete="new-password"
                     />
                   </FormControl>
 
@@ -111,10 +115,10 @@ export function RegisterForm({ onSubmit, form }: RegisterFormProps) {
                   <FormLabel>Confirmar senha</FormLabel>
                   <FormControl>
                     <Input
-                      id="confirmPassword"
-                      placeholder="A mesma senha forte"
                       {...field}
+                      placeholder="A mesma senha forte"
                       type="password"
+                      autoComplete="new-password"
                     />
                   </FormControl>
 

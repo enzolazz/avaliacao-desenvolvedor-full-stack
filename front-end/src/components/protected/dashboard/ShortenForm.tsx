@@ -29,10 +29,9 @@ export function ShortenForm({ onSubmit, form }: URLFormProps) {
           name="label"
           render={({ field }) => (
             <FormItem>
-              <FormLabel htmlFor="label">Apelido</FormLabel>
+              <FormLabel>Apelido</FormLabel>
               <FormControl>
                 <Input
-                  id="label"
                   placeholder="URL 1"
                   {...field}
                   className="w-full max-w-full break-words"
@@ -47,10 +46,9 @@ export function ShortenForm({ onSubmit, form }: URLFormProps) {
           name="url"
           render={({ field }) => (
             <FormItem>
-              <FormLabel htmlFor="url">URL</FormLabel>
+              <FormLabel>URL</FormLabel>
               <FormControl>
                 <Input
-                  id="url"
                   placeholder="https://exemplo.com/url-muito-longa"
                   {...field}
                   className="w-full max-w-full break-words"

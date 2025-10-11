@@ -6,6 +6,7 @@ import (
 	"url-shortener/back-end/config"
 	"url-shortener/back-end/internal/dtos"
 	"url-shortener/back-end/internal/services"
+	"url-shortener/back-end/internal/utils"
 
 	"github.com/gin-gonic/gin"
 )
@@ -31,24 +32,26 @@ func (c *AuthController) Login(ctx *gin.Context) {
 		return
 	}
 
+	secure, domain := utils.GetDomain()
+
 	http.SetCookie(ctx.Writer, &http.Cookie{
-		Name:    "access_token",
-		Value:   accessToken,
-		Expires: time.Now().Add(config.GetConstants().AccessTokenExp),
-		Path:    "/",
-		// Domain:   domain, // Uncomment for production
-		Secure:   true,
+		Name:     "access_token",
+		Value:    accessToken,
+		Expires:  time.Now().Add(config.Consts.AccessTokenExp),
+		Path:     "/",
+		Domain:   domain,
+		Secure:   secure,
 		HttpOnly: true,
 		SameSite: http.SameSiteLaxMode,
 	})
 
 	http.SetCookie(ctx.Writer, &http.Cookie{
-		Name:    "refresh_token",
-		Value:   refreshToken,
-		Expires: time.Now().Add(config.GetConstants().RefreshTokenExp),
-		Path:    "/",
-		// Domain:   domain, // Uncomment for production
-		Secure:   true,
+		Name:     "refresh_token",
+		Value:    refreshToken,
+		Expires:  time.Now().Add(config.Consts.RefreshTokenExp),
+		Path:     "/",
+		Domain:   domain,
+		Secure:   secure,
 		HttpOnly: true,
 		SameSite: http.SameSiteLaxMode,
 	})
@@ -76,24 +79,26 @@ func (c *AuthController) Refresh(ctx *gin.Context) {
 		return
 	}
 
+	secure, domain := utils.GetDomain()
+
 	http.SetCookie(ctx.Writer, &http.Cookie{
-		Name:    "access_token",
-		Value:   accessToken,
-		Expires: time.Now().Add(config.GetConstants().AccessTokenExp),
-		Path:    "/",
-		// Domain:   domain, // Uncomment for production
-		Secure:   true,
+		Name:     "access_token",
+		Value:    accessToken,
+		Expires:  time.Now().Add(config.Consts.AccessTokenExp),
+		Path:     "/",
+		Domain:   domain,
+		Secure:   secure,
 		HttpOnly: true,
 		SameSite: http.SameSiteLaxMode,
 	})
 
 	http.SetCookie(ctx.Writer, &http.Cookie{
-		Name:    "refresh_token",
-		Value:   refreshToken,
-		Expires: time.Now().Add(config.GetConstants().RefreshTokenExp),
-		Path:    "/",
-		// Domain:   domain, // Uncomment for production
-		Secure:   true,
+		Name:     "refresh_token",
+		Value:    refreshToken,
+		Expires:  time.Now().Add(config.Consts.RefreshTokenExp),
+		Path:     "/",
+		Domain:   domain,
+		Secure:   secure,
 		HttpOnly: true,
 		SameSite: http.SameSiteLaxMode,
 	})
@@ -101,10 +106,12 @@ func (c *AuthController) Refresh(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, gin.H{"message": "new tokens issued"})
 }
 
-func (s *AuthController) Logout(ctx *gin.Context) {
-	ctx.SetCookie("access_token", "", -1, "/", "localhost", true, true)
+func (c *AuthController) Logout(ctx *gin.Context) {
+	secure, domain := utils.GetDomain()
 
-	ctx.SetCookie("refresh_token", "", -1, "/", "localhost", true, true)
+	ctx.SetCookie("access_token", "", -1, "/", domain, secure, true)
+
+	ctx.SetCookie("refresh_token", "", -1, "/", domain, secure, true)
 
 	ctx.JSON(http.StatusOK, gin.H{
 		"message": "Logout realizado com sucesso",
