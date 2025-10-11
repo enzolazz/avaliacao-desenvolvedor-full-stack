@@ -51,7 +51,8 @@ export function DataTable<TData, TValue>({
   return (
     <div className="w-full space-y-6">
       <Input
-        placeholder="Filtrar nomes..."
+        id="label_search"
+        placeholder="Filtrar apelidos..."
         value={(table.getColumn("label")?.getFilterValue() as string) ?? ""}
         onChange={(event) =>
           table.getColumn("label")?.setFilterValue(event.target.value)

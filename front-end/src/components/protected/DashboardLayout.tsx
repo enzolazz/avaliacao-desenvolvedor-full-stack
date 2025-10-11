@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/sidebar";
 import { Header } from "./Header";
 import { Link, Outlet, useLocation } from "react-router";
-import { ChartColumn, Link2, User } from "lucide-react";
+import { ChartColumn, Link2 } from "lucide-react";
 import { ThemeToggle } from "../ThemeToggle";
 import { DataProvider } from "@/context/DataContext";
 
@@ -26,11 +26,6 @@ const items = [
     title: "Métricas",
     url: "/dashboard/metricas",
     icon: ChartColumn,
-  },
-  {
-    title: "Perfil",
-    url: "/dashboard/perfil",
-    icon: User,
   },
 ];
 

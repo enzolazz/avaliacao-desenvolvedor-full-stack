@@ -7,7 +7,6 @@ import { AuthProvider } from "@/context/AuthContext";
 import Auth from "@/pages/Auth";
 import Dashboard from "@/pages/Dashboard";
 import NotFound from "@/pages/NotFound";
-import Profile from "@/pages/Profile";
 import { BrowserRouter, Navigate, Route, Routes } from "react-router";
 import Redirect from "@/pages/Redirect";
 import Metrics from "@/pages/Metrics";
@@ -31,7 +30,6 @@ function App() {
               }
             >
               <Route index element={<Dashboard />} />
-              <Route path="perfil" element={<Profile />} />
               <Route path="metricas/:id?" element={<Metrics />} />
             </Route>
             <Route path="404" element={<NotFound />} />

@@ -10,8 +10,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { LogOut, User } from "lucide-react";
-import { Link } from "react-router";
+import { LogOut } from "lucide-react";
 import { useAuth } from "@/hooks/use-auth";
 
 interface HeaderProps {
@@ -42,11 +41,6 @@ export function Header({ title }: HeaderProps) {
             Configurações
           </DropdownMenuLabel>
           <DropdownMenuGroup>
-            <DropdownMenuItem asChild>
-              <Link to="/dashboard/perfil">
-                <User /> Perfil
-              </Link>
-            </DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem
               onClick={logout}
