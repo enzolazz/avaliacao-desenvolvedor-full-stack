@@ -5,6 +5,8 @@ import (
 	"os"
 	"strconv"
 	"time"
+
+	"github.com/joho/godotenv"
 )
 
 type Config struct {
@@ -26,6 +28,8 @@ type Constants struct {
 }
 
 func GetConfig() *Config {
+	_ = godotenv.Load()
+
 	redisDB := 0
 	if val := os.Getenv("REDIS_DB"); val != "" {
 		db, err := strconv.Atoi(val)
