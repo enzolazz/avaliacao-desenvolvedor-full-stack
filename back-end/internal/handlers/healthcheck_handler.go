@@ -44,7 +44,7 @@ func HandleLinkStatusUpdates(ps *pubsub.RedisPubSub, coll *mongo.Collection) (fu
 		userChannel := fmt.Sprintf("user:%s:updates", link.UserID.Hex())
 		userMsg, _ := json.Marshal(update)
 
-		log.Println("Trying to send updates to user: " + link.UserID.String())
+		log.Println("Trying to send updates to user: " + link.UserID.Hex())
 		if err := ps.Publish(userChannel, string(userMsg)); err != nil {
 			log.Println("Failed to publish user-specific update:", err)
 		}
