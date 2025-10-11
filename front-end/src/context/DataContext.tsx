@@ -13,6 +13,7 @@ export function DataProvider({ children }: { children: ReactNode }) {
 
   const fetchData = async () => {
     try {
+      await new Promise((resolve) => setTimeout(resolve, 3000));
       const result = await apiClient.url.getAllLinks();
       setData(result || []);
     } catch (err: unknown) {
