@@ -18,13 +18,29 @@ export function AuthTabs() {
 
   const [activeTab, setActiveTab] = useState<"login" | "register">("login");
 
+  const registerForm: UseFormReturn<RegisterFormValues> = useForm({
+    resolver: zodResolver(registerFormSchema),
+    defaultValues: {
+      name: "",
+      surname: "",
+      username: "",
+      password: "",
+      confirmPassword: "",
+    },
+  });
+
+  const loginForm: UseFormReturn<LoginFormValues> = useForm({
+    resolver: zodResolver(loginFormSchema),
+    defaultValues: { username: "", password: "" },
+  });
+
   const handleRegister = async (values: RegisterFormValues) => {
     try {
       await register(values);
       toast.success("Registro realizado com sucesso!");
 
       registerForm.reset();
-      setActiveTab("login");
+      navigate("/dashboard");
     } catch (err: unknown) {
       if (err instanceof ApiError) {
         if (err.status === 409) {
@@ -73,23 +89,6 @@ export function AuthTabs() {
       }
     }
   };
-
-  const registerForm: UseFormReturn<RegisterFormValues> = useForm({
-    resolver: zodResolver(registerFormSchema),
-    defaultValues: {
-      name: "",
-      surname: "",
-      username: "",
-      password: "",
-      confirmPassword: "",
-    },
-  });
-
-  const loginForm: UseFormReturn<LoginFormValues> = useForm({
-    resolver: zodResolver(loginFormSchema),
-    defaultValues: { username: "", password: "" },
-  });
-
   return (
     <div className="flex w-full max-w-xl flex-col gap-6 text-xl">
       <Tabs

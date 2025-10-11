@@ -2,9 +2,9 @@ package services
 
 import (
 	"errors"
-
 	"url-shortener/back-end/internal/models"
 	"url-shortener/back-end/internal/repositories"
+
 	"github.com/google/uuid"
 	"golang.org/x/crypto/bcrypt"
 )
@@ -18,7 +18,10 @@ func NewUserService(repo *repositories.UserRepository) *UserService {
 }
 
 func (s *UserService) CreateUser(user models.User) error {
-	existing, _ := s.Repo.FindByUsername(user.Username)
+	existing, err := s.Repo.FindByUsername(user.Username)
+	if err != nil {
+		return err
+	}
 	if existing != nil {
 		return errors.New("nome de usuário já existe")
 	}

@@ -20,7 +20,7 @@ func RegisterRoutes(r *gin.Engine, jwtSecret string) {
 	shortLinkService := services.NewShortLinkService(shortLinkRepo)
 	metricsService := services.NewMetricsService(metricsRepo)
 
-	userController := controllers.NewUserController(userService)
+	userController := controllers.NewUserController(userService, authService)
 	authController := controllers.NewAuthController(authService)
 	shortLinkController := controllers.NewShortLinkController(shortLinkService)
 	metricsController := controllers.NewMetricsController(metricsService)
