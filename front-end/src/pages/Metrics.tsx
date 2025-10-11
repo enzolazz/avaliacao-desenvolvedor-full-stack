@@ -27,8 +27,6 @@ export default function Metrics() {
   useEffect(() => {
     if (!data) return;
 
-    console.log(data);
-
     if (params.id && data.length === 0) {
       navigate("/dashboard/metricas", { replace: true });
       return;
