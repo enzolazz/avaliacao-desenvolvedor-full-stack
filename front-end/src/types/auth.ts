@@ -45,7 +45,6 @@ export type RegisterFormValues = z.infer<typeof registerFormSchema>;
 
 interface AuthContextType {
   user: User | null;
-  token: string | null;
   login: (data: LoginRequest) => Promise<void>;
   register: (data: RegisterRequest) => Promise<void>;
   logout: () => void;

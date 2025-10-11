@@ -31,8 +31,8 @@ function App() {
               }
             >
               <Route index element={<Dashboard />} />
-              <Route path="profile" element={<Profile />} />
-              <Route path="metrics/:id?" element={<Metrics />} />
+              <Route path="perfil" element={<Profile />} />
+              <Route path="metricas/:id?" element={<Metrics />} />
             </Route>
             <Route path="404" element={<NotFound />} />
             <Route path="403" element={<Forbidden />} />

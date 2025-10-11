@@ -28,8 +28,7 @@ export default function Metrics() {
     if (!data) return;
 
     if (params.id && data.length === 0) {
-      toast.error("Você não tem URLs para acessar métricas.");
-      navigate("/403", { replace: true });
+      navigate("/dashboard/metricas", { replace: true });
       return;
     }
 
@@ -44,7 +43,7 @@ export default function Metrics() {
 
       setCurrentId(params.id);
 
-      window.history.replaceState(null, "", "/dashboard/metrics");
+      window.history.replaceState(null, "", "/dashboard/metricas");
     } else if (data.length > 0) {
       setCurrentId(data[0].id);
     }

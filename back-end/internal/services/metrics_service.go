@@ -3,8 +3,8 @@ package services
 import (
 	"time"
 
-	"github.com/enzolazz/avaliacao-desenvolvedor-full-stack/back-end/internal/models"
-	"github.com/enzolazz/avaliacao-desenvolvedor-full-stack/back-end/internal/repositories"
+	"url-shortener/back-end/internal/models"
+	"url-shortener/back-end/internal/repositories"
 )
 
 type MetricsService struct {

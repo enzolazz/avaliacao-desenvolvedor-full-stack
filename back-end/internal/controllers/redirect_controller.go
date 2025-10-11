@@ -3,8 +3,8 @@ package controllers
 import (
 	"fmt"
 	"net/http"
+	"url-shortener/back-end/internal/services"
 
-	"github.com/enzolazz/avaliacao-desenvolvedor-full-stack/back-end/internal/services"
 	"github.com/gin-gonic/gin"
 )
 
@@ -24,7 +24,7 @@ func (c *RedirectController) HandleRedirect(ctx *gin.Context) {
 	id := ctx.Param("id")
 
 	link, err := c.ShortLinkService.GetByID(id)
-	if err != nil {
+	if err != nil || link.Status != "active" {
 		ctx.JSON(http.StatusNotFound, gin.H{"error": "short link not found"})
 		return
 	}

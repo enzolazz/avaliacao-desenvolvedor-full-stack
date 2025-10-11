@@ -1,11 +1,12 @@
 package routes
 
 import (
-	"github.com/enzolazz/avaliacao-desenvolvedor-full-stack/back-end/internal/controllers"
-	"github.com/enzolazz/avaliacao-desenvolvedor-full-stack/back-end/internal/db"
-	"github.com/enzolazz/avaliacao-desenvolvedor-full-stack/back-end/internal/middleware"
-	"github.com/enzolazz/avaliacao-desenvolvedor-full-stack/back-end/internal/repositories"
-	"github.com/enzolazz/avaliacao-desenvolvedor-full-stack/back-end/internal/services"
+	"url-shortener/back-end/internal/controllers"
+	"url-shortener/back-end/internal/db"
+	"url-shortener/back-end/internal/middleware"
+	"url-shortener/back-end/internal/repositories"
+	"url-shortener/back-end/internal/services"
+
 	"github.com/gin-gonic/gin"
 )
 
@@ -20,7 +21,6 @@ func RegisterRoutes(r *gin.Engine, jwtSecret string) {
 	metricsService := services.NewMetricsService(metricsRepo)
 
 	userController := controllers.NewUserController(userService)
-	profileController := controllers.NewProfileController(userService)
 	authController := controllers.NewAuthController(authService)
 	shortLinkController := controllers.NewShortLinkController(shortLinkService)
 	metricsController := controllers.NewMetricsController(metricsService)
@@ -31,12 +31,6 @@ func RegisterRoutes(r *gin.Engine, jwtSecret string) {
 		auth := api.Group("/auth")
 		auth.POST("/login", authController.Login)
 		auth.POST("/register", userController.Register)
-
-		profile := api.Group("/profile")
-		profile.Use(middleware.JWTMiddleware(jwtSecret))
-		{
-			profile.GET("/me", profileController.Me)
-		}
 
 		users := api.Group("/users")
 		users.Use(middleware.AllowOnlyLocalhost())

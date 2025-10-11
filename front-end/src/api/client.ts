@@ -61,10 +61,7 @@ export const apiClient = {
   url: {
     async shorten(data: ShortenRequest): Promise<ShortenResponse> {
       try {
-        const token = localStorage.getItem("token");
-        const response = await api.post<ShortenResponse>("/shorten", data, {
-          headers: token ? { Authorization: `Bearer ${token}` } : {},
-        });
+        const response = await api.post<ShortenResponse>("/shorten", data);
 
         return response.data;
       } catch (error: unknown) {
@@ -79,10 +76,7 @@ export const apiClient = {
     },
     async getAllLinks(): Promise<ShortURL[]> {
       try {
-        const token = localStorage.getItem("token");
-        const response = await api.get<ShortURL[]>("/shorten", {
-          headers: token ? { Authorization: `Bearer ${token}` } : {},
-        });
+        const response = await api.get<ShortURL[]>("/shorten");
 
         return response.data;
       } catch (error: unknown) {
@@ -115,13 +109,8 @@ export const apiClient = {
   metrics: {
     async getMetrics(id: string, filter: string): Promise<MetricData[]> {
       try {
-        const token = localStorage.getItem("token");
-
         const { data } = await api.get<MetricData[]>(
           `/metrics/${filter}/${id}`,
-          {
-            headers: token ? { Authorization: `Bearer ${token}` } : {},
-          },
         );
 
         return data;

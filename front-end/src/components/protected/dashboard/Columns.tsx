@@ -9,8 +9,8 @@ import {
   TooltipContent,
 } from "@/components/ui/tooltip";
 import type { ColumnDef } from "@tanstack/react-table";
-import { CircleCheck, CircleX } from "lucide-react";
 import { Link } from "react-router";
+import { Badge } from "@/components/ui/badge";
 
 function truncate(text: string, maxLength: number) {
   return text.length > maxLength ? text.slice(0, maxLength) + "…" : text;
@@ -76,11 +76,14 @@ export const columns: ColumnDef<ShortURL>[] = [
     accessorKey: "status",
     header: "Status",
     cell: ({ row }) => (
-      <div>
+      <div className="w-16 flex justify-center">
         {row.getValue("status") === "active" ? (
-          <CircleCheck color="green" />
+          <Badge
+            variant="default"
+            className="bg-green-500 h-5 w-5 rounded-full"
+          ></Badge>
         ) : (
-          <CircleX color="red" />
+          <Badge variant="destructive" className="h-5 w-5 rounded-full"></Badge>
         )}
       </div>
     ),

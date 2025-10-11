@@ -9,10 +9,9 @@ export function DataProvider({ children }: { children: ReactNode }) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
   const fetchedRef = useRef(false);
+  const wsRef = useRef<WebSocket | null>(null);
 
   const fetchData = async () => {
-    setLoading(true);
-    setError(false);
     try {
       const result = await apiClient.url.getAllLinks();
       setData(result || []);
@@ -29,9 +28,32 @@ export function DataProvider({ children }: { children: ReactNode }) {
   };
 
   useEffect(() => {
+    setLoading(true);
+    setError(false);
     if (fetchedRef.current) return;
     fetchedRef.current = true;
 
+    const backend = import.meta.env.VITE_BACKEND_SERVER.replace(
+      /^http?:\/\//,
+      "",
+    );
+
+    const connect = () => {
+      const wsProtocol = window.location.protocol === "https:" ? "wss" : "ws";
+      const ws = new WebSocket(`${wsProtocol}://${backend}/updates/ws`);
+      wsRef.current = ws;
+      ws.onopen = () => console.log("WebSocket connected");
+      ws.onmessage = () => fetchData();
+      ws.onclose = () => {
+        console.log("WebSocket disconnected. Reconnecting...");
+        wsRef.current = null;
+        setTimeout(() => {
+          if (!wsRef.current) connect();
+        }, 3000);
+      };
+    };
+
+    connect();
     fetchData();
   }, []);
 

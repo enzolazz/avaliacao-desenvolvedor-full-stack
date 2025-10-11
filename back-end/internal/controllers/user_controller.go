@@ -3,9 +3,9 @@ package controllers
 import (
 	"net/http"
 
-	"github.com/enzolazz/avaliacao-desenvolvedor-full-stack/back-end/internal/dtos"
-	"github.com/enzolazz/avaliacao-desenvolvedor-full-stack/back-end/internal/models"
-	"github.com/enzolazz/avaliacao-desenvolvedor-full-stack/back-end/internal/services"
+	"url-shortener/back-end/internal/dtos"
+	"url-shortener/back-end/internal/models"
+	"url-shortener/back-end/internal/services"
 	"github.com/gin-gonic/gin"
 )
 

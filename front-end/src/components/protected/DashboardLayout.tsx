@@ -23,13 +23,13 @@ const items = [
     icon: Link2,
   },
   {
-    title: "Metrics",
-    url: "/dashboard/metrics",
+    title: "Métricas",
+    url: "/dashboard/metricas",
     icon: ChartColumn,
   },
   {
     title: "Perfil",
-    url: "/dashboard/profile",
+    url: "/dashboard/perfil",
     icon: User,
   },
 ];

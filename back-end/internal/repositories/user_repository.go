@@ -4,7 +4,7 @@ import (
 	"context"
 	"time"
 
-	"github.com/enzolazz/avaliacao-desenvolvedor-full-stack/back-end/internal/models"
+	"url-shortener/back-end/internal/models"
 	"github.com/google/uuid"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
