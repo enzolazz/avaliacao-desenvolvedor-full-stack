@@ -25,7 +25,11 @@ func (s *AuthService) Login(username, password string) (string, *models.User, er
 		return "", nil, errors.New("nome de usuário ou senha inválida")
 	}
 
-	token := newToken(user.ID.Hex(), user.Username)
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
+		"user_id":  user.ID.Hex(),
+		"username": user.Username,
+		"exp":      time.Now().Add(24 * time.Hour).Unix(),
+	})
 
 	signedToken, err := token.SignedString([]byte(s.JWTSecret))
 	if err != nil {
@@ -37,6 +41,9 @@ func (s *AuthService) Login(username, password string) (string, *models.User, er
 
 func (s *AuthService) Refresh(oldToken string) (string, error) {
 	token, err := jwt.Parse(oldToken, func(token *jwt.Token) (any, error) {
+		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
+			return nil, jwt.ErrTokenMalformed
+		}
 		return []byte(s.JWTSecret), nil
 	})
 
@@ -53,33 +60,27 @@ func (s *AuthService) Refresh(oldToken string) (string, error) {
 	if !ok {
 		return "", errors.New("user_id claim missing")
 	}
-	userID, ok := userIDRaw.(string)
-	if !ok {
-		return "", errors.New("user_id claim is not a string")
-	}
 
 	usernameRaw, ok := claims["username"]
 	if !ok {
 		return "", errors.New("username claim missing")
 	}
+
 	username, ok := usernameRaw.(string)
 	if !ok {
 		return "", errors.New("username claim is not a string")
 	}
 
-	newToken := newToken(userID, username)
+	newToken := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
+		"user_id":  userIDRaw,
+		"username": username,
+		"exp":      time.Now().Add(24 * time.Hour).Unix(),
+	})
+
 	signedToken, err := newToken.SignedString([]byte(s.JWTSecret))
 	if err != nil {
 		return "", err
 	}
 
 	return signedToken, nil
-}
-
-func newToken(userID, username string) *jwt.Token {
-	return jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
-		"user_id":  userID,
-		"username": username,
-		"exp":      time.Now().Add(24 * time.Hour).Unix(),
-	})
 }
