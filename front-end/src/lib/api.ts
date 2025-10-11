@@ -1,7 +1,5 @@
-import { apiClient, ApiError } from "@/api/client";
-import { useAuth } from "@/hooks/use-auth";
+import { apiClient } from "@/api/client";
 import axios, { AxiosError } from "axios";
-import { toast } from "sonner";
 
 export const api = axios.create({
   baseURL: import.meta.env.VITE_BACKEND_SERVER + "/api",
