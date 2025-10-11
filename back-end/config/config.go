@@ -21,7 +21,8 @@ type Config struct {
 }
 
 type Constants struct {
-	CookieExp           time.Duration
+	AccessTokenExp      time.Duration
+	RefreshTokenExp     time.Duration
 	HealthCheckInterval time.Duration
 	IsAliveTimeout      time.Duration
 	CorsMaxAge          time.Duration
@@ -59,7 +60,8 @@ func GetConfig() *Config {
 
 func GetConstants() *Constants {
 	constants := &Constants{
-		CookieExp:           1 * time.Hour,
+		AccessTokenExp:      1 * time.Hour,
+		RefreshTokenExp:     30 * 24 * time.Hour,
 		HealthCheckInterval: 10 * time.Minute,
 		IsAliveTimeout:      5 * time.Second,
 		CorsMaxAge:          12 * time.Hour,

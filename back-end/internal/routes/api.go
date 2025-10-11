@@ -30,6 +30,8 @@ func RegisterRoutes(r *gin.Engine, jwtSecret string) {
 	{
 		auth := api.Group("/auth")
 		auth.POST("/login", authController.Login)
+		auth.POST("/refresh", authController.Refresh)
+		auth.POST("/logout", authController.Logout)
 		auth.POST("/register", userController.Register)
 
 		users := api.Group("/users")

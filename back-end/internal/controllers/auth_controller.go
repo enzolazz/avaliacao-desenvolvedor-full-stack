@@ -25,19 +25,30 @@ func (c *AuthController) Login(ctx *gin.Context) {
 		return
 	}
 
-	token, user, err := c.Service.Login(input.Username, input.Password)
+	accessToken, refreshToken, user, err := c.Service.Login(input.Username, input.Password)
 	if err != nil {
 		ctx.JSON(http.StatusUnauthorized, gin.H{"error": err.Error()})
 		return
 	}
 
 	http.SetCookie(ctx.Writer, &http.Cookie{
-		Name:    "token",
-		Value:   token,
-		Expires: time.Now().Add(config.GetConstants().CookieExp),
+		Name:    "access_token",
+		Value:   accessToken,
+		Expires: time.Now().Add(config.GetConstants().AccessTokenExp),
 		Path:    "/",
 		// Domain:   domain, // Uncomment for production
-		// Secure:   secure, // Uncomment for production
+		Secure:   true,
+		HttpOnly: true,
+		SameSite: http.SameSiteLaxMode,
+	})
+
+	http.SetCookie(ctx.Writer, &http.Cookie{
+		Name:    "refresh_token",
+		Value:   refreshToken,
+		Expires: time.Now().Add(config.GetConstants().RefreshTokenExp),
+		Path:    "/",
+		// Domain:   domain, // Uncomment for production
+		Secure:   true,
 		HttpOnly: true,
 		SameSite: http.SameSiteLaxMode,
 	})
@@ -53,17 +64,49 @@ func (c *AuthController) Login(ctx *gin.Context) {
 }
 
 func (c *AuthController) Refresh(ctx *gin.Context) {
-	var input dtos.RefreshRequest
-	if err := ctx.ShouldBindJSON(&input); err != nil {
-		ctx.JSON(http.StatusBadRequest, gin.H{"error": "invalid request body"})
+	oldRefreshToken, err := ctx.Cookie("refresh_token")
+	if err != nil {
+		ctx.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized: No token provided"})
 		return
 	}
 
-	newToken, err := c.Service.Refresh(input.Token)
+	accessToken, refreshToken, err := c.Service.RotateRefreshToken(oldRefreshToken)
 	if err != nil {
 		ctx.JSON(http.StatusUnauthorized, gin.H{"error": err.Error()})
 		return
 	}
 
-	ctx.JSON(http.StatusOK, dtos.RefreshResponse{Token: newToken})
+	http.SetCookie(ctx.Writer, &http.Cookie{
+		Name:    "access_token",
+		Value:   accessToken,
+		Expires: time.Now().Add(config.GetConstants().AccessTokenExp),
+		Path:    "/",
+		// Domain:   domain, // Uncomment for production
+		Secure:   true,
+		HttpOnly: true,
+		SameSite: http.SameSiteLaxMode,
+	})
+
+	http.SetCookie(ctx.Writer, &http.Cookie{
+		Name:    "refresh_token",
+		Value:   refreshToken,
+		Expires: time.Now().Add(config.GetConstants().RefreshTokenExp),
+		Path:    "/",
+		// Domain:   domain, // Uncomment for production
+		Secure:   true,
+		HttpOnly: true,
+		SameSite: http.SameSiteLaxMode,
+	})
+
+	ctx.JSON(http.StatusOK, gin.H{"message": "new tokens issued"})
+}
+
+func (s *AuthController) Logout(ctx *gin.Context) {
+	ctx.SetCookie("access_token", "", -1, "/", "localhost", true, true)
+
+	ctx.SetCookie("refresh_token", "", -1, "/", "localhost", true, true)
+
+	ctx.JSON(http.StatusOK, gin.H{
+		"message": "Logout realizado com sucesso",
+	})
 }
