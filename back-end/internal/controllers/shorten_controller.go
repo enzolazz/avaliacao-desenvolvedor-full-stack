@@ -31,7 +31,7 @@ func (c *ShortLinkController) Create(ctx *gin.Context) {
 
 	alive := utils.IsURLAlive(input.OriginalURL)
 	if !alive {
-		ctx.JSON(http.StatusUnprocessableEntity, gin.H{"error": "URL inválida ou inativa"})
+		ctx.JSON(http.StatusUnprocessableEntity, gin.H{"error": "Invalid or inactive URL"})
 		return
 	}
 
