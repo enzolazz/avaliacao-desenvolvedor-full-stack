@@ -97,7 +97,7 @@ export default function Metrics() {
           <CardHeader>
             <CardTitle className="flex items-center justify-between">
               Selecionar URL:
-              <Select value={currentId} onValueChange={setCurrentId}>
+              <Select value={currentId || ""} onValueChange={setCurrentId}>
                 <SelectTrigger className="w-40">
                   <SelectValue placeholder="Selecionar URL" />
                 </SelectTrigger>

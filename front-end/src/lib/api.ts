@@ -44,7 +44,7 @@ api.interceptors.response.use(
       window.location.href = "/auth";
 
       return Promise.reject(error);
-    }
+    } else if (originalRequest.url === "/auth/login") throw error;
 
     if (isRefreshing) {
       return new Promise((resolve, reject) => {

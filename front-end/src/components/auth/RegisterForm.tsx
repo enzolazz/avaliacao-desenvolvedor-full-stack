@@ -45,7 +45,7 @@ export function RegisterForm({ onSubmit, form }: RegisterFormProps) {
                 <FormItem>
                   <FormLabel>Nome</FormLabel>
                   <FormControl>
-                    <Input placeholder="Fulano Henrique" {...field} />
+                    <Input id="name" placeholder="Fulano Henrique" {...field} />
                   </FormControl>
 
                   <FormMessage />
@@ -59,7 +59,11 @@ export function RegisterForm({ onSubmit, form }: RegisterFormProps) {
                 <FormItem>
                   <FormLabel>Sobrenome</FormLabel>
                   <FormControl>
-                    <Input placeholder="Costa da Silva" {...field} />
+                    <Input
+                      id="surname"
+                      placeholder="Costa da Silva"
+                      {...field}
+                    />
                   </FormControl>
 
                   <FormMessage />
@@ -73,7 +77,7 @@ export function RegisterForm({ onSubmit, form }: RegisterFormProps) {
                 <FormItem>
                   <FormLabel>Nome de usuário</FormLabel>
                   <FormControl>
-                    <Input placeholder="fulano01" {...field} />
+                    <Input id="username" placeholder="fulano01" {...field} />
                   </FormControl>
 
                   <FormMessage />
@@ -88,6 +92,7 @@ export function RegisterForm({ onSubmit, form }: RegisterFormProps) {
                   <FormLabel>Senha</FormLabel>
                   <FormControl>
                     <Input
+                      id="password"
                       placeholder="Uma senha forte"
                       {...field}
                       type="password"
@@ -106,6 +111,7 @@ export function RegisterForm({ onSubmit, form }: RegisterFormProps) {
                   <FormLabel>Confirmar senha</FormLabel>
                   <FormControl>
                     <Input
+                      id="confirmPassword"
                       placeholder="A mesma senha forte"
                       {...field}
                       type="password"

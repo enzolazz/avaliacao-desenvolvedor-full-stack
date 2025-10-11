@@ -31,14 +31,14 @@ export function UserURLs() {
 
     if (data.length === 0) {
       return (
-        <>
+        <div className="w-full flex flex-col items-center justify-center">
           <Link2 className="h-12 w-12 text-muted-foreground/50 mb-4" />
           <h3 className="font-semibold text-lg mb-2">Nenhuma URL ainda</h3>
-          <p className="text-muted-foreground text-sm max-w-sm">
+          <p className="text-muted-foreground text-sm max-w-sm text-center">
             Você ainda não encurtou nenhuma URL. Use o formulário acima para
             criar sua primeira URL encurtada!
           </p>
-        </>
+        </div>
       );
     }
 
