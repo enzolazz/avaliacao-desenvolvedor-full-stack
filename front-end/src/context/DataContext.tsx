@@ -39,7 +39,8 @@ export function DataProvider({ children }: { children: ReactNode }) {
     );
 
     const connect = () => {
-      const ws = new WebSocket(`ws://${backend}/updates/ws`);
+      const wsProtocol = window.location.protocol === "https:" ? "wss" : "ws";
+      const ws = new WebSocket(`${wsProtocol}://${backend}/updates/ws`);
       wsRef.current = ws;
       ws.onopen = () => console.log("WebSocket connected");
       ws.onmessage = () => fetchData();
