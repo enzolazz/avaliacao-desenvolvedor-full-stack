@@ -107,9 +107,11 @@ func (c *AuthController) Refresh(ctx *gin.Context) {
 }
 
 func (c *AuthController) Logout(ctx *gin.Context) {
-	ctx.SetCookie("access_token", "", -1, "/", "localhost", true, true)
+	secure, domain := utils.GetDomain()
 
-	ctx.SetCookie("refresh_token", "", -1, "/", "localhost", true, true)
+	ctx.SetCookie("access_token", "", -1, "/", domain, secure, true)
+
+	ctx.SetCookie("refresh_token", "", -1, "/", domain, secure, true)
 
 	ctx.JSON(http.StatusOK, gin.H{
 		"message": "Logout realizado com sucesso",

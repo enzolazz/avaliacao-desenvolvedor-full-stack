@@ -4,7 +4,6 @@ import type {
   LoginRequest,
   LoginResponse,
   RegisterRequest,
-  RegisterResponse,
 } from "./types/auth";
 import type {
   RedirectResponse,
