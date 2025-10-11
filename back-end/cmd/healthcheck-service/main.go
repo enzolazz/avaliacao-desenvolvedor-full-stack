@@ -94,7 +94,7 @@ func checkAndPublish(ps *pubsub.RedisPubSub, coll *mongo.Collection, link models
 				"shortLinkId": link.ID,
 				"status":      status,
 			})
-			log.Println("Trying to publish inactive status to link: " + link.ID.Hex())
+			log.Println("Trying to publish inactive status to link: " + link.ID)
 			if err := ps.Publish("links:status", string(msg)); err != nil {
 				log.Println("Failed to publish update:", err)
 			}
