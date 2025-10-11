@@ -2,12 +2,12 @@ package utils
 
 import (
 	"net/http"
-	"time"
+	"url-shortener/back-end/config"
 )
 
 func IsURLAlive(url string) bool {
 	client := http.Client{
-		Timeout: 5 * time.Second,
+		Timeout: config.GetConstants().HealthCheckInterval,
 	}
 	resp, err := client.Get(url)
 	if err != nil {

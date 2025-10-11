@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"url-shortener/back-end/config"
 	"url-shortener/back-end/internal/pubsub"
 	"url-shortener/back-end/internal/utils"
 
@@ -11,10 +12,22 @@ import (
 	"github.com/gorilla/websocket"
 )
 
+var allowedOrigins = map[string]bool{
+	config.GetConfig().FrontendServer: true,
+}
+
 var wsUpgrader = websocket.Upgrader{
 	ReadBufferSize:  1024,
 	WriteBufferSize: 1024,
-	CheckOrigin:     func(r *http.Request) bool { return true },
+	CheckOrigin: func(r *http.Request) bool {
+		origin := r.Header.Get("Origin")
+		if allowedOrigins[origin] {
+			return true
+		}
+
+		log.Printf("Blocked WebSocket connection from origin: %s", origin)
+		return false
+	},
 }
 
 func WebSocketHandler(ps *pubsub.RedisPubSub) gin.HandlerFunc {

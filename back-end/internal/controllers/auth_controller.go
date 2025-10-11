@@ -3,6 +3,7 @@ package controllers
 import (
 	"net/http"
 	"time"
+	"url-shortener/back-end/config"
 	"url-shortener/back-end/internal/dtos"
 	"url-shortener/back-end/internal/services"
 
@@ -33,7 +34,7 @@ func (c *AuthController) Login(ctx *gin.Context) {
 	http.SetCookie(ctx.Writer, &http.Cookie{
 		Name:    "token",
 		Value:   token,
-		Expires: time.Now().Add(time.Hour * 1),
+		Expires: time.Now().Add(config.GetConstants().CookieExp),
 		Path:    "/",
 		// Domain:   domain, // Uncomment for production
 		// Secure:   secure, // Uncomment for production

@@ -2,7 +2,6 @@ package main
 
 import (
 	"log"
-	"time"
 	"url-shortener/back-end/config"
 	"url-shortener/back-end/internal/db"
 	"url-shortener/back-end/internal/handlers"
@@ -36,12 +35,12 @@ func main() {
 
 	r := gin.Default()
 	r.Use(cors.New(cors.Config{
-		AllowOrigins:     []string{"http://localhost:5173"},
+		AllowOrigins:     []string{config.GetConfig().FrontendServer},
 		AllowMethods:     []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
 		AllowHeaders:     []string{"Origin", "Content-Type", "Authorization"},
 		ExposeHeaders:    []string{"Content-Length"},
 		AllowCredentials: true,
-		MaxAge:           12 * time.Hour,
+		MaxAge:           config.GetConstants().CorsMaxAge,
 	}))
 
 	routes.RegisterRoutes(r, cfg.JWTSecret)

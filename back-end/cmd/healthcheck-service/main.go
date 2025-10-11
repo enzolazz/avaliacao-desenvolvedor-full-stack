@@ -29,7 +29,7 @@ func main() {
 
 	ps := pubsub.NewRedisPubSub(cfg)
 
-	ticker := time.NewTicker(10 * time.Minute)
+	ticker := time.NewTicker(config.GetConstants().HealthCheckInterval)
 	defer ticker.Stop()
 
 	log.Println("Healthchecker service started")

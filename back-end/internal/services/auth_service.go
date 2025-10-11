@@ -28,7 +28,7 @@ func (s *AuthService) Login(username, password string) (string, *models.User, er
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
 		"user_id":  user.ID.Hex(),
 		"username": user.Username,
-		"exp":      time.Now().Add(24 * time.Hour).Unix(),
+		"exp":      time.Now().Add(1 * time.Hour).Unix(),
 	})
 
 	signedToken, err := token.SignedString([]byte(s.JWTSecret))
@@ -74,7 +74,7 @@ func (s *AuthService) Refresh(oldToken string) (string, error) {
 	newToken := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
 		"user_id":  userIDRaw,
 		"username": username,
-		"exp":      time.Now().Add(24 * time.Hour).Unix(),
+		"exp":      time.Now().Add(1 * time.Hour).Unix(),
 	})
 
 	signedToken, err := newToken.SignedString([]byte(s.JWTSecret))
