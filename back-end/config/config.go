@@ -29,22 +29,30 @@ func InitConfig() {
 		}
 
 		Cfg = &Config{
-			FrontendServer: getEnv("FRONTEND_SERVER"),
-			MongoURI:       getEnv("MONGODB_URI"),
-			DBName:         getEnv("DB_NAME"),
-			RedisURI:       getEnv("REDIS_URI"),
-			ServerPort:     getEnv("SERVER_PORT"),
-			JWTSecret:      getEnv("JWT_SECRET"),
+			FrontendServer: getRequiredEnv("FRONTEND_SERVER"),
+			MongoURI:       getRequiredEnv("MONGODB_URI"),
+			DBName:         getOptionalEnv("DB_NAME", "url_shortener"),
+			RedisURI:       getRequiredEnv("REDIS_URI"),
+			ServerPort:     getOptionalEnv("SERVER_PORT", "8080"),
+			JWTSecret:      getRequiredEnv("JWT_SECRET"),
 		}
 
 		log.Println("Loaded environment config successfully!")
 	})
 }
 
-func getEnv(key string) string {
+func getRequiredEnv(key string) string {
 	value := os.Getenv(key)
 	if value == "" {
 		log.Fatalf("Missing required environment variable: %s", key)
+	}
+	return value
+}
+
+func getOptionalEnv(key string, defaultValue string) string {
+	value := os.Getenv(key)
+	if value == "" {
+		return defaultValue
 	}
 	return value
 }
