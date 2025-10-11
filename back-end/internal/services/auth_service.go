@@ -20,28 +20,39 @@ func NewAuthService(repo *repositories.UserRepository, secret string) *AuthServi
 	return &AuthService{UserRepo: repo, JWTSecret: secret}
 }
 
-func (s *AuthService) Login(username, password string) (string, *models.User, error) {
+func (s *AuthService) Login(username, password string) (string, string, *models.User, error) {
 	user, _ := s.UserRepo.FindByUsername(username)
 	if user == nil || bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(password)) != nil {
-		return "", nil, errors.New("nome de usuário ou senha inválida")
+		return "", "", nil, errors.New("nome de usuário ou senha inválida")
 	}
 
-	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
+	accessToken := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
 		"user_id":  user.ID.Hex(),
 		"username": user.Username,
-		"exp":      time.Now().Add(config.GetConstants().CookieExp).Unix(),
+		"exp":      time.Now().Add(config.GetConstants().AccessTokenExp).Unix(),
 	})
 
-	signedToken, err := token.SignedString([]byte(s.JWTSecret))
+	refreshToken := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
+		"user_id":  user.ID.Hex(),
+		"username": user.Username,
+		"exp":      time.Now().Add(config.GetConstants().RefreshTokenExp).Unix(),
+	})
+
+	accessSignedToken, err := accessToken.SignedString([]byte(s.JWTSecret))
 	if err != nil {
-		return "", nil, err
+		return "", "", nil, err
 	}
 
-	return signedToken, user, nil
+	refreshSignedToken, err := refreshToken.SignedString([]byte(s.JWTSecret))
+	if err != nil {
+		return "", "", nil, err
+	}
+
+	return accessSignedToken, refreshSignedToken, user, nil
 }
 
-func (s *AuthService) Refresh(oldToken string) (string, error) {
-	token, err := jwt.Parse(oldToken, func(token *jwt.Token) (any, error) {
+func (s *AuthService) RotateRefreshToken(refreshToken string) (string, string, error) {
+	token, err := jwt.Parse(refreshToken, func(token *jwt.Token) (any, error) {
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 			return nil, jwt.ErrTokenMalformed
 		}
@@ -49,39 +60,53 @@ func (s *AuthService) Refresh(oldToken string) (string, error) {
 	})
 
 	if err != nil || !token.Valid {
-		return "", errors.New("invalid token")
+		return "", "", errors.New("invalid or expired refresh token")
 	}
 
 	claims, ok := token.Claims.(jwt.MapClaims)
 	if !ok {
-		return "", errors.New("invalid token claims")
+		return "", "", errors.New("invalid token claims")
 	}
 
 	userIDRaw, ok := claims["user_id"]
 	if !ok {
-		return "", errors.New("user_id claim missing")
+		return "", "", errors.New("user_id missing in claims")
 	}
 
 	usernameRaw, ok := claims["username"]
 	if !ok {
-		return "", errors.New("username claim missing")
+		return "", "", errors.New("username missing in claims")
 	}
 
+	userID, ok := userIDRaw.(string)
+	if !ok {
+		return "", "", errors.New("user_id claim is not a string")
+	}
 	username, ok := usernameRaw.(string)
 	if !ok {
-		return "", errors.New("username claim is not a string")
+		return "", "", errors.New("username claim is not a string")
 	}
 
-	newToken := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
-		"user_id":  userIDRaw,
+	newAccess := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
+		"user_id":  userID,
 		"username": username,
-		"exp":      time.Now().Add(config.GetConstants().CookieExp).Unix(),
+		"exp":      time.Now().Add(config.GetConstants().AccessTokenExp).Unix(),
 	})
 
-	signedToken, err := newToken.SignedString([]byte(s.JWTSecret))
+	newRefresh := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
+		"user_id":  userID,
+		"username": username,
+		"exp":      time.Now().Add(config.GetConstants().RefreshTokenExp).Unix(),
+	})
+
+	accessSigned, err := newAccess.SignedString([]byte(s.JWTSecret))
 	if err != nil {
-		return "", err
+		return "", "", err
+	}
+	refreshSigned, err := newRefresh.SignedString([]byte(s.JWTSecret))
+	if err != nil {
+		return "", "", err
 	}
 
-	return signedToken, nil
+	return accessSigned, refreshSigned, nil
 }

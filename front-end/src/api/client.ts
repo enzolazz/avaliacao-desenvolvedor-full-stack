@@ -57,6 +57,20 @@ export const apiClient = {
         );
       }
     },
+
+    async logout() {
+      try {
+        await api.post("/auth/logout");
+      } catch (error: unknown) {
+        returnErrors(error);
+
+        throw new Error(
+          error instanceof Error
+            ? `Erro inesperado: ${error.message}`
+            : "Erro inesperado ao realizar logout.",
+        );
+      }
+    },
   },
   url: {
     async shorten(data: ShortenRequest): Promise<ShortenResponse> {
